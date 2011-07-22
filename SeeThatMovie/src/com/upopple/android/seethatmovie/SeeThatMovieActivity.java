@@ -1,4 +1,6 @@
-package com.upopple.andoid.seethatmovie;
+package com.upopple.android.seethatmovie;
+
+import com.upopple.andoid.seethatmovie.R;
 
 import android.app.Activity;
 import android.os.Bundle;
