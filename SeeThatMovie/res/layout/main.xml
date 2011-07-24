@@ -4,8 +4,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:weightSum="1">
-    <Button android:text="Button" 
+    <Button android:text="Add a movie" 
     	android:id="@+id/addMovieHome" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content"></Button>
+    <Button android:text="View Movie List" 
+    	android:id="@+id/movieList" 
     	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content"></Button>
     <ListView android:id="@+id/movieList" 

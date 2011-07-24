@@ -5,7 +5,7 @@
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="8" />
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
         <activity android:name="com.upopple.android.seethatmovie.SeeThatMovieActivity"
                   android:label="@string/app_name">
             <intent-filter>
@@ -13,6 +13,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		<activity android:name=".AddMovie" />
+		<activity android:name="com.upopple.android.seethatmovie.AddMovie"/>
+		<activity android:name="com.upopple.android.seethatmovie.CategoryView"/>
     </application>
 </manifest>

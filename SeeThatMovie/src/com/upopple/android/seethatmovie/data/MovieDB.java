@@ -39,7 +39,7 @@ public class MovieDB {
 			cvs.put(Constants.MOVIE_TITLE, title);
 			cvs.put(Constants.MOVIE_CATEGORIES, categories);
 			cvs.put(Constants.DATE_ADDED, java.lang.System.currentTimeMillis());
-			return db.insert(Constants.DATABASE_NAME, null, cvs);
+			return db.insert(Constants.MOVIE_TABLE_NAME, null, cvs);
 		} catch(SQLiteException e){
 			Log.v("Insert into database failed", e.getMessage());
 			return -1;
@@ -47,7 +47,7 @@ public class MovieDB {
 	}
 	
 	public Cursor getMovies(){
-		Cursor c = db.query(Constants.DATABASE_NAME, null, null, null, null, null, null);
+		Cursor c = db.query(Constants.MOVIE_TABLE_NAME, null, null, null, null, null, null);
 		return c;
 	}
 }
