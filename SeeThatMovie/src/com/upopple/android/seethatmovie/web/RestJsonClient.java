@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 public class RestJsonClient {
 
-    public static JSONObject connect(String url)
+    public static JSONObject connect(String url) throws IOException
     {
 
         HttpClient httpclient = new DefaultHttpClient();
@@ -51,6 +51,7 @@ public class RestJsonClient {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            throw(e);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

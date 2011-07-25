@@ -26,6 +26,6 @@ public class RTMovieResult {
 	}
 	
 	public String getTitleYear(){
-		return title + " (" + year +")";
+		return (year.equals("")) ? title : title + " (" + year +")";
 	}
 }

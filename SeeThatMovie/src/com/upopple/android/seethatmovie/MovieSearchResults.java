@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,11 +23,14 @@ import com.upopple.android.seethatmovie.web.RottenTomatoesAPI;
 
 public class MovieSearchResults extends ListActivity {
 	SearchAdapter searchAdapter;
+	TextView listDescription;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.movie_search_results);
 		super.onCreate(savedInstanceState);
+		
+		listDescription = (TextView)findViewById(R.id.categoryListText);
 		
 		Intent i = getIntent();
 		String search = i.getStringExtra("search");
@@ -42,6 +46,13 @@ public class MovieSearchResults extends ListActivity {
 			li = LayoutInflater.from(context);
 			try {
 				movieResults = RottenTomatoesAPI.getMovieTitles(search);
+				if(movieResults == null){
+					movieResults = new ArrayList<RTMovieResult>();
+					listDescription.setText("Oh no! No movies were found.\nSelect what you typed in to add it anyway, or go back to try again.");
+					movieResults.add(new RTMovieResult(search, ""));
+				} else {
+					listDescription.setText("Sweet, these movies match your search.\nSelect the right one!");
+				}
 			} catch (JSONException e) {
 				Log.v("Unable to get search results", e.getMessage());
 			}

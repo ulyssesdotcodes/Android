@@ -1,5 +1,6 @@
 package com.upopple.android.seethatmovie.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -15,7 +16,13 @@ public class RottenTomatoesAPI {
 	public static ArrayList<RTMovieResult> getMovieTitles(String search) throws JSONException{
 		String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey="+api_key+"&q="+Uri.encode(search)+"&limit=10";
 		
-		JSONObject movieSearch = RestJsonClient.connect(url);
+		JSONObject movieSearch;
+		try {
+			movieSearch = RestJsonClient.connect(url);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 		JSONArray movies = movieSearch.getJSONArray("movies");
 		
 		ArrayList<RTMovieResult> movieResults = new ArrayList<RTMovieResult>();
@@ -25,8 +32,6 @@ public class RottenTomatoesAPI {
 			currentMovie = movies.getJSONObject(i);
 			movieResults.add(new RTMovieResult(currentMovie.getString("title"), currentMovie.getString("year")));
 		}
-		
-		
 		
 		return movieResults;
 	}
