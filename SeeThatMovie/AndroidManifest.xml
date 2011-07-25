@@ -16,5 +16,6 @@
         </activity>
 		<activity android:name="com.upopple.android.seethatmovie.AddMovie"/>
 		<activity android:name="com.upopple.android.seethatmovie.CategoryView"/>
+		<activity android:name="com.upopple.android.seethatmovie.MovieSearchResults"></activity>
     </application>
 </manifest>

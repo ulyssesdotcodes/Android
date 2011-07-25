@@ -82,7 +82,7 @@ public class MovieSearchResults extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		
 		Intent i = new Intent(MovieSearchResults.this, AddMovie.class);
-		i.putExtra("movieTitle", l.getItemAtPosition(position).toString());
+		i.putExtra("movieTitle", ((RTMovieResult)l.getItemAtPosition(position)).getTitleYear());
 		startActivity(i);
 	}
 
