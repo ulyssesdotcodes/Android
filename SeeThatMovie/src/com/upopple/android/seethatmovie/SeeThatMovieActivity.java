@@ -6,21 +6,26 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.upopple.andoid.seethatmovie.R;
 
 public class SeeThatMovieActivity extends Activity {
-    /** Called when the activity is first created. */
+	EditText searchMovies;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        searchMovies =  (EditText) findViewById(R.id.searchMovies);
+        
         Button addMovie = (Button)findViewById(R.id.addMovieHome);
         addMovie.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-		        Intent i = new Intent(SeeThatMovieActivity.this, AddMovie.class);
+		        Intent i = new Intent(SeeThatMovieActivity.this, MovieSearchResults.class);
+		        i.putExtra("search", searchMovies.getText().toString());
 		        startActivity(i);
 			}
 		});

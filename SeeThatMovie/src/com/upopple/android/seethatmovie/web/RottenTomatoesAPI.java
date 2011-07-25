@@ -12,20 +12,22 @@ public class RottenTomatoesAPI {
 	public static final String api_key = "464f28afyq7r9bgk9nrqaetm";
 	
 	
-	public static ArrayList<String> getMovieTitles(ArrayList<String> movieTitles, String start) throws JSONException{
-		String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey="+api_key+"&q="+Uri.encode(start)+"&limit=10";
+	public static ArrayList<RTMovieResult> getMovieTitles(String search) throws JSONException{
+		String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey="+api_key+"&q="+Uri.encode(search)+"&limit=10";
 		
 		JSONObject movieSearch = RestJsonClient.connect(url);
 		JSONArray movies = movieSearch.getJSONArray("movies");
-		if(movieTitles!=null && movieTitles.size() > 0)
-			movieTitles.clear();
-		else if(movieTitles == null)
-			movieTitles = new ArrayList<String>();
 		
+		ArrayList<RTMovieResult> movieResults = new ArrayList<RTMovieResult>();
+		
+		JSONObject currentMovie;
 		for(int i=0; i<movies.length(); i++){
-			movieTitles.add(movies.getJSONObject(i).getString("title"));
+			currentMovie = movies.getJSONObject(i);
+			movieResults.add(new RTMovieResult(currentMovie.getString("title"), currentMovie.getString("year")));
 		}
 		
-		return movieTitles;
+		
+		
+		return movieResults;
 	}
 }

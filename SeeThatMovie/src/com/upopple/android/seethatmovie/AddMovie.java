@@ -23,7 +23,7 @@ import com.upopple.android.seethatmovie.web.RottenTomatoesAPI;
 
 public class AddMovie extends Activity {
 	EditText categoryET;
-	AutoCompleteTextView titleBox;
+	EditText titleBox;
 	ArrayList<String> movieList;
 	MovieDB mdb;
 	
@@ -37,10 +37,9 @@ public class AddMovie extends Activity {
 		mdb = new MovieDB(this);
 		mdb.open();
 		
-		titleBox = (AutoCompleteTextView)findViewById(R.id.movieTitleEdit);
-		setupMovieTitleAutocomplete();
-
-		
+		Intent i = getIntent();
+		titleBox = (EditText)findViewById(R.id.movieTitleEdit);
+		titleBox.setText(i.getStringExtra("movieTitle"));
 		
 		categoryET = (EditText)findViewById(R.id.movieCategoryEdit);
 		addbutton = (Button)findViewById(R.id.addMovieButton);
@@ -64,29 +63,5 @@ public class AddMovie extends Activity {
 		categoryET.setText("");
 		Intent i = new Intent(AddMovie.this, SeeThatMovieActivity.class);
 		startActivity(i);
-	}
-	
-	public void setupMovieTitleAutocomplete(){
-		movieList = new ArrayList<String>();
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, movieList);
-		adapter.setNotifyOnChange(true);
-		titleBox.setAdapter(adapter);
-		
-		titleBox.addTextChangedListener(new TextWatcher() {
-			ArrayList<String> movieList;
-			
-			public void onTextChanged(CharSequence s, int start, int before, int count) {}
-			
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {}
-			
-			public void afterTextChanged(Editable s) {
-				try {
-					movieList = RottenTomatoesAPI.getMovieTitles(movieList, s.toString());
-				} catch (JSONException e) {
-					Log.v("Getting movies failed", e.getMessage());
-				}
-			}
-		});
-	}
+	}	
 }
