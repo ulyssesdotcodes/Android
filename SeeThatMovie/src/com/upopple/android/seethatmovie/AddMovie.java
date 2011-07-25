@@ -1,18 +1,30 @@
 package com.upopple.android.seethatmovie;
 
+import java.util.ArrayList;
+
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.upopple.andoid.seethatmovie.R;
 import com.upopple.android.seethatmovie.data.MovieDB;
+import com.upopple.android.seethatmovie.web.RottenTomatoesAPI;
 
 public class AddMovie extends Activity {
-	EditText titleET, categoryET;
+	EditText categoryET;
+	AutoCompleteTextView titleBox;
+	ArrayList<String> movieList;
 	MovieDB mdb;
 	
 	Button addbutton;
@@ -25,7 +37,11 @@ public class AddMovie extends Activity {
 		mdb = new MovieDB(this);
 		mdb.open();
 		
-		titleET = (EditText)findViewById(R.id.movieTitleEdit);
+		titleBox = (AutoCompleteTextView)findViewById(R.id.movieTitleEdit);
+		setupMovieTitleAutocomplete();
+
+		
+		
 		categoryET = (EditText)findViewById(R.id.movieCategoryEdit);
 		addbutton = (Button)findViewById(R.id.addMovieButton);
 		addbutton.setOnClickListener(new OnClickListener() {
@@ -42,11 +58,35 @@ public class AddMovie extends Activity {
 	}
 	
 	public void saveItToDb(){
-		mdb.insertmovie(titleET.getText().toString(), categoryET.getText().toString());
+		mdb.insertmovie(titleBox.getText().toString(), categoryET.getText().toString());
 		mdb.close();
-		titleET.setText("");
+		titleBox.setText("");
 		categoryET.setText("");
 		Intent i = new Intent(AddMovie.this, SeeThatMovieActivity.class);
 		startActivity(i);
+	}
+	
+	public void setupMovieTitleAutocomplete(){
+		movieList = new ArrayList<String>();
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, movieList);
+		adapter.setNotifyOnChange(true);
+		titleBox.setAdapter(adapter);
+		
+		titleBox.addTextChangedListener(new TextWatcher() {
+			ArrayList<String> movieList;
+			
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {}
+			
+			public void afterTextChanged(Editable s) {
+				try {
+					movieList = RottenTomatoesAPI.getMovieTitles(movieList, s.toString());
+				} catch (JSONException e) {
+					Log.v("Getting movies failed", e.getMessage());
+				}
+			}
+		});
 	}
 }
