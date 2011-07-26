@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.upopple.andoid.seethatmovie.R;
 
 public class SeeThatMovieActivity extends Activity {
-	EditText searchMovies;
+	EditText searchMovies, categorySelect;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,11 +30,14 @@ public class SeeThatMovieActivity extends Activity {
 			}
 		});
         
+        categorySelect = (EditText) findViewById(R.id.categorySelectText);
+        
         Button movieList = (Button)findViewById(R.id.movieList);
         movieList.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
 		        Intent i = new Intent(SeeThatMovieActivity.this, CategoryView.class);
+		        i.putExtra("category", categorySelect.getText().toString());
 		        startActivity(i);
 			}
 		});

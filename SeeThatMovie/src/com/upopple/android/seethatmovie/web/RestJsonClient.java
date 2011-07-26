@@ -1,9 +1,9 @@
 package com.upopple.android.seethatmovie.web;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -11,12 +11,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class RestJsonClient {
 
-    public static JSONObject connect(String url) throws IOException
+    public static Reader connect(String url) throws Exception
     {
 
         HttpClient httpclient = new DefaultHttpClient();
@@ -26,8 +24,8 @@ public class RestJsonClient {
 
         // Execute the request
         HttpResponse response;
-
-        JSONObject json = new JSONObject();
+        
+        Reader reader = null;
 
         try {
             response = httpclient.execute(httpget);
@@ -38,10 +36,9 @@ public class RestJsonClient {
 
                 // A Simple JSON Response Read
                 InputStream instream = entity.getContent();
-                String result= convertStreamToString(instream);
 
-                json=new JSONObject(result);
-
+                reader = new InputStreamReader(instream);
+                
                 instream.close();
             }
 
@@ -52,37 +49,11 @@ public class RestJsonClient {
             // TODO Auto-generated catch block
             e.printStackTrace();
             throw(e);
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch(Exception e){
+        	throw(e);
         }
 
-        return json;
-    }
-    /**
-     *
-     * @param is
-     * @return String
-     */
-    public static String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
+        return reader;
     }
 
 }

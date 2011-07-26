@@ -4,12 +4,9 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent" android:weightSum="1">
-    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/movieTitleText" android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="TextView"></TextView>
-    <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/movieTitleEdit">
-        <requestFocus></requestFocus>
-    </EditText>
+    <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/movieTitle"></TextView>
     <TextView android:text="TextView" android:id="@+id/movieCategoryText" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
     <EditText android:inputType="textMultiLine" android:id="@+id/movieCategoryEdit" android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="0.46"></EditText>
-    <Button android:layout_height="wrap_content" android:id="@+id/addMovieButton" android:text="Button" android:layout_width="78dp" android:layout_weight="0.05"></Button>
+    <Button android:layout_height="wrap_content" android:id="@+id/addMovieButton" android:text="Add Movie" android:layout_width="78dp" android:layout_weight="0.05"></Button>
     
 </LinearLayout>

@@ -20,9 +20,9 @@ import com.upopple.android.seethatmovie.util.Constants;
 
 public class CategoryView extends ListActivity {
 	MovieDB mdb;
-	MovieAdapter movieAdapter;
-	private class Movie{
-		public Movie(String title, String cat, String date){
+	CategoryViewAdapter categoryViewAdapter;
+	private class CategoryViewMovie{
+		public CategoryViewMovie(String title, String cat, String date){
 			this.title = title;
 			this.categories = cat;
 			this.createdTs = date;
@@ -37,21 +37,21 @@ public class CategoryView extends ListActivity {
 		setContentView(R.layout.category_view);
 		
 		super.onCreate(savedInstanceState);
-		movieAdapter = new MovieAdapter(this);
-		this.setListAdapter(movieAdapter);
+		categoryViewAdapter = new CategoryViewAdapter(this, this.getIntent().getStringExtra("category"));
+		this.setListAdapter(categoryViewAdapter);
 	}
 	
-	private class MovieAdapter extends BaseAdapter{
+	private class CategoryViewAdapter extends BaseAdapter{
 		private LayoutInflater li;
-		private ArrayList<Movie> movies;
+		private ArrayList<CategoryViewMovie> movies;
 		
-		public MovieAdapter(Context context){
+		public CategoryViewAdapter(Context context, String category){
 			li = LayoutInflater.from(context);
-			movies = new ArrayList<Movie>();
-			getdata();
+			movies = new ArrayList<CategoryViewMovie>();
+			getdata(category);
 		}
 		
-		public void getdata(){
+		public void getdata(String category){
 			Cursor c = mdb.getMovies();
 			startManagingCursor(c);
 			if(c.moveToFirst()){
@@ -60,14 +60,14 @@ public class CategoryView extends ListActivity {
 					String categories = c.getString(c.getColumnIndex(Constants.MOVIE_CATEGORIES));
 					DateFormat dateFormat = DateFormat.getDateTimeInstance();
 					String dateData = dateFormat.format(new Date(c.getLong(c.getColumnIndex(Constants.DATE_ADDED))));
-					Movie temp = new Movie(title, categories, dateData);
+					CategoryViewMovie temp = new CategoryViewMovie(title, categories, dateData);
 					movies.add(temp);
 				} while(c.moveToNext());
 			}
 		}
 		
 		public int getCount() {return movies.size();}
-		public Movie getItem(int i){return movies.get(i);}
+		public CategoryViewMovie getItem(int i){return movies.get(i);}
 		public long getItemId(int i){return i;}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder holder;
@@ -76,7 +76,7 @@ public class CategoryView extends ListActivity {
 				v = li.inflate(R.layout.movierow, null);
 				holder = new ViewHolder();
 				holder.mTitle = (TextView)v.findViewById(R.id.name);
-				holder.mDate = (TextView)v.findViewById(R.id.dateText);
+				holder.mCategories = (TextView)v.findViewById(R.id.categoriesText);
 				v.setTag(holder);
 			} else {
 				holder = (ViewHolder) v.getTag();
@@ -84,7 +84,7 @@ public class CategoryView extends ListActivity {
 			
 			holder.movie = getItem(position);
 			holder.mTitle.setText(holder.movie.title);
-			holder.mDate.setText(holder.movie.createdTs);
+			holder.mCategories.setText(holder.movie.categories);
 			
 			v.setTag(holder);
 			
@@ -92,9 +92,9 @@ public class CategoryView extends ListActivity {
 		}
 		
 		public class ViewHolder {
-			Movie movie;
+			CategoryViewMovie movie;
 			TextView mTitle;
-			TextView mDate;
+			TextView mCategories;
 		}
 	}
 	

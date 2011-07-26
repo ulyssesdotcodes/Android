@@ -1,6 +1,7 @@
 package com.upopple.android.seethatmovie;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
 
@@ -13,12 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.upopple.andoid.seethatmovie.R;
 import com.upopple.android.seethatmovie.web.RTMovieResult;
+import com.upopple.android.seethatmovie.web.RTMovieResults;
 import com.upopple.android.seethatmovie.web.RottenTomatoesAPI;
 
 public class MovieSearchResults extends ListActivity {
@@ -40,27 +41,35 @@ public class MovieSearchResults extends ListActivity {
 	
 	private class SearchAdapter extends BaseAdapter{
 		private LayoutInflater li;
-		private ArrayList<RTMovieResult> movieResults;
+		private RTMovieResults movieResults;
 		
 		public SearchAdapter(Context context, String search){
 			li = LayoutInflater.from(context);
+			
 			try {
-				movieResults = RottenTomatoesAPI.getMovieTitles(search);
-				if(movieResults == null){
-					movieResults = new ArrayList<RTMovieResult>();
-					listDescription.setText("Oh no! No movies were found.\nSelect what you typed in to add it anyway, or go back to try again.");
-					movieResults.add(new RTMovieResult(search, ""));
-				} else {
-					listDescription.setText("Sweet, these movies match your search.\nSelect the right one!");
-				}
-			} catch (JSONException e) {
-				Log.v("Unable to get search results", e.getMessage());
+				movieResults = new RottenTomatoesAPI().execute(search).get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			if(movieResults == null){
+				movieResults = new RTMovieResults();
+				movieResults.setMovies(new ArrayList<RTMovieResult>());
+				listDescription.setText("Oh no! No movies were found.\nSelect what you typed in to add it anyway, or go back to try again.");
+				movieResults.getMovies().add(new RTMovieResult(search));
+			} else {
+				listDescription.setText("Sweet, these movies match your search.\nSelect the right one!");
 			}
 		}
 		
 
-		public int getCount() {return movieResults.size();}
-		public RTMovieResult getItem(int i){return movieResults.get(i);}
+		public int getCount() {return movieResults.getMovies().size();}
+		public RTMovieResult getItem(int i){return movieResults.getMovies().get(i);}
 		public long getItemId(int i){return i;}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder holder;

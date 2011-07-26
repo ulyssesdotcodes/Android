@@ -15,6 +15,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
 			Constants.KEY_ID+" integer primary key autoincrement, "+
 			Constants.MOVIE_TITLE+" text not null, "+
 			Constants.MOVIE_CATEGORIES+" text not null, "+
+			Constants.MOVIE_API_ID+" text not null, "+
 			Constants.DATE_ADDED + " long);";
 	
 	public MovieDbHelper(Context context, String name, CursorFactory factory, int version){

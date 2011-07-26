@@ -2,28 +2,21 @@ package com.upopple.android.seethatmovie;
 
 import java.util.ArrayList;
 
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.upopple.andoid.seethatmovie.R;
 import com.upopple.android.seethatmovie.data.MovieDB;
-import com.upopple.android.seethatmovie.web.RottenTomatoesAPI;
 
 public class AddMovie extends Activity {
 	EditText categoryET;
-	EditText titleBox;
+	TextView titleBox;
 	ArrayList<String> movieList;
 	MovieDB mdb;
 	
@@ -38,7 +31,7 @@ public class AddMovie extends Activity {
 		mdb.open();
 		
 		Intent i = getIntent();
-		titleBox = (EditText)findViewById(R.id.movieTitleEdit);
+		titleBox = (TextView)findViewById(R.id.movieTitle);
 		titleBox.setText(i.getStringExtra("movieTitle"));
 		
 		categoryET = (EditText)findViewById(R.id.movieCategoryEdit);
@@ -57,7 +50,9 @@ public class AddMovie extends Activity {
 	}
 	
 	public void saveItToDb(){
-		mdb.insertmovie(titleBox.getText().toString(), categoryET.getText().toString());
+		String movieId = getIntent().getStringExtra("movieId");
+		if(movieId.equals(""))
+			mdb.insertmovie(titleBox.getText().toString(), categoryET.getText().toString());
 		mdb.close();
 		titleBox.setText("");
 		categoryET.setText("");

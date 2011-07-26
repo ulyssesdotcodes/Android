@@ -14,17 +14,18 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int addMovieButton=0x7f050004;
+        public static final int addMovieButton=0x7f050003;
         public static final int addMovieHome=0x7f050006;
-        public static final int categoryListText=0x7f050009;
-        public static final int dateText=0x7f05000b;
-        public static final int movieCategoryEdit=0x7f050003;
-        public static final int movieCategoryText=0x7f050002;
-        public static final int movieList=0x7f050007;
-        public static final int movieSearchResult=0x7f050008;
-        public static final int movieTitleEdit=0x7f050001;
-        public static final int movieTitleText=0x7f050000;
-        public static final int name=0x7f05000a;
+        public static final int categoriesText=0x7f05000c;
+        public static final int categoryListText=0x7f05000a;
+        public static final int categorySelectText=0x7f050007;
+        public static final int categoryViewText=0x7f050004;
+        public static final int movieCategoryEdit=0x7f050002;
+        public static final int movieCategoryText=0x7f050001;
+        public static final int movieList=0x7f050008;
+        public static final int movieSearchResult=0x7f050009;
+        public static final int movieTitle=0x7f050000;
+        public static final int name=0x7f05000b;
         public static final int searchMovies=0x7f050005;
     }
     public static final class layout {

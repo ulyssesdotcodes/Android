@@ -11,6 +11,7 @@
     	android:id="@+id/addMovieHome" 
     	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content"></Button>
+    <EditText android:id="@+id/categorySelectText" android:layout_height="wrap_content" android:layout_width="match_parent"></EditText>
     <Button android:text="View Movie List" 
     	android:id="@+id/movieList" 
     	android:layout_width="wrap_content" 
