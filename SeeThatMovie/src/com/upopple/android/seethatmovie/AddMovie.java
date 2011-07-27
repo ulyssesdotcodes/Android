@@ -12,13 +12,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.upopple.andoid.seethatmovie.R;
-import com.upopple.android.seethatmovie.data.MovieDB;
+import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class AddMovie extends Activity {
 	EditText categoryET;
 	TextView titleBox;
 	ArrayList<String> movieList;
-	MovieDB mdb;
+	MoviesDbAdapter mdb;
 	
 	Button addbutton;
 	
@@ -27,7 +27,7 @@ public class AddMovie extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_movie);
 		
-		mdb = new MovieDB(this);
+		mdb = new MoviesDbAdapter(this);
 		mdb.open();
 		
 		
