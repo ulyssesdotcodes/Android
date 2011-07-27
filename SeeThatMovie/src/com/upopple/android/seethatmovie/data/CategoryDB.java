@@ -23,6 +23,10 @@ public class CategoryDB {
 		db.close();
 	}
 	
+	public void open(SQLiteDatabase db) throws SQLiteException{
+		this.db = db;
+	}
+	
 	public void open() throws SQLiteException{
 		try{
 			db = cdbh.getWritableDatabase();

@@ -20,6 +20,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
 	
 	public MovieDbHelper(Context context, String name, CursorFactory factory, int version){
 		super(context, name, factory, version);
+		Log.v("Create_table", CREATE_TABLE);
 	}
 	
 	@Override

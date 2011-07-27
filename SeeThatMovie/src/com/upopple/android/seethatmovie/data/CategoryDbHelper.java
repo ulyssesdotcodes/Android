@@ -14,15 +14,16 @@ public class CategoryDbHelper extends SQLiteOpenHelper {
 			Constants.CATEGORIES_TABLE_NAME+" ("+
 			Constants.KEY_ID+" integer primary key autoincrement, "+
 			Constants.CATEGORIES_MOVIE_TITLE+" text not null, "+
-			Constants.CATEGORIES_CATEGORY+" text not null, ";
+			Constants.CATEGORIES_CATEGORY+" text not null);";
 	
 	public CategoryDbHelper(Context context, String name, CursorFactory factory, int version){
 		super(context, name, factory, version);
+		Log.v("Create_table", CREATE_TABLE);
 	}
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.v("CategoryDbHelper onCreate", "Creating all the tables");
+		Log.v("CategoryDbHelper onCreate", "Creating all the tables " );
 		try{
 			db.execSQL(CREATE_TABLE);
 		} catch(SQLiteException e){
@@ -32,7 +33,7 @@ public class CategoryDbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w("TaskDBAdapter", "Ipgradiung from version "+oldVersion
+		Log.w("TaskDBAdapter", "Upgradiung from version "+oldVersion
 				+" to "+newVersion
 				+", which will destroy all old data");
 		db.execSQL("drop table if exists " + Constants.CATEGORIES_TABLE_NAME);

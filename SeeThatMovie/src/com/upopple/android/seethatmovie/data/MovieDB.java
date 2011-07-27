@@ -51,7 +51,7 @@ public class MovieDB {
 			cvs.put(Constants.DATE_ADDED, java.lang.System.currentTimeMillis());
 			long result = db.insert(Constants.MOVIE_TABLE_NAME, null, cvs);
 			
-			cdb.open();
+			cdb.open(db);
 			cdb.insertmovie(""+result, title, categories);
 			cdb.close();
 			
