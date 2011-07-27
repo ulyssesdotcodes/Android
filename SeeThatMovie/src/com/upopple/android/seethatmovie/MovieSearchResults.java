@@ -14,7 +14,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.upopple.andoid.seethatmovie.R;
 import com.upopple.android.seethatmovie.web.RTMovieResult;
 import com.upopple.android.seethatmovie.web.RTMovieResults;
 import com.upopple.android.seethatmovie.web.RottenTomatoesAPIAsync;

@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.upopple.andoid.seethatmovie.R;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class AddMovie extends Activity {

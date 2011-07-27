@@ -8,8 +8,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.upopple.andoid.seethatmovie.R;
-
 public class SeeThatMovieActivity extends Activity {
 	EditText searchMovies, categorySelect;
 	

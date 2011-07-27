@@ -14,10 +14,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.upopple.andoid.seethatmovie.R;
 import com.upopple.android.seethatmovie.data.CategoriesDbAdapter;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
-import com.upopple.android.seethatmovie.util.Constants;
 
 public class CategoryView extends ListActivity {
 	MoviesDbAdapter mdb;
