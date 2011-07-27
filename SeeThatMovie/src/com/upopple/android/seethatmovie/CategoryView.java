@@ -6,35 +6,31 @@ import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.upopple.android.seethatmovie.data.CategoriesDbAdapter;
+import com.upopple.android.seethatmovie.data.DBMovie;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class CategoryView extends ListActivity {
 	MoviesDbAdapter mdb;
 	CategoriesDbAdapter cdb;
 	CategoryViewAdapter categoryViewAdapter;
-	private class CategoryViewMovie{
-		public CategoryViewMovie(String title, String date){
-			this.title = title;
-			this.createdTs = date;
-		}
-		public String title, createdTs;
-	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mdb = new MoviesDbAdapter(this);
 		mdb.open();
 		
-		cdb = new CategoriesDbAdapter(this);
+		cdb = mdb.getCdbAdapter();
 		cdb.open();
 		setContentView(R.layout.category_view);
 		
@@ -45,48 +41,24 @@ public class CategoryView extends ListActivity {
 	
 	private class CategoryViewAdapter extends BaseAdapter{
 		private LayoutInflater li;
-		private ArrayList<CategoryViewMovie> movies;
+		private ArrayList<DBMovie> movies;
 		
 		public CategoryViewAdapter(Context context, String category){
 			li = LayoutInflater.from(context);
-			movies = new ArrayList<CategoryViewMovie>();
+			movies = new ArrayList<DBMovie>();
 			getdata(category);
 		}
 		
 		public void getdata(String category){
 			if(category.equals("")){
-				Cursor c = mdb.getMovies();
-				startManagingCursor(c);
-				if(c.moveToFirst()){
-					do{
-						String title = c.getString(c.getColumnIndex(MoviesDbAdapter.TITLE));
-						DateFormat dateFormat = DateFormat.getDateTimeInstance();
-						String dateData = dateFormat.format(new Date(c.getLong(c.getColumnIndex(MoviesDbAdapter.DATE_ADDED))));
-						CategoryViewMovie temp = new CategoryViewMovie(title, dateData);
-						movies.add(temp);
-					} while(c.moveToNext());
-				}	
+				movies = mdb.getMovies(false);
 			} else {
-				Cursor categoryCursor = cdb.getMovies(category);
-				startManagingCursor(categoryCursor);
-				if(categoryCursor.moveToFirst()){
-					do{
-						Cursor c = mdb.getMovieById(categoryCursor.getString(categoryCursor.getColumnIndex(CategoriesDbAdapter.MOVIE_ID)));
-						startManagingCursor(c);
-						if(c.moveToFirst()){
-							String title = c.getString(c.getColumnIndex(MoviesDbAdapter.TITLE));
-							DateFormat dateFormat = DateFormat.getDateTimeInstance();
-							String dateData = dateFormat.format(new Date(c.getLong(c.getColumnIndex(MoviesDbAdapter.DATE_ADDED))));
-							CategoryViewMovie temp = new CategoryViewMovie(title, dateData);
-							movies.add(temp);
-						}
-					} while(categoryCursor.moveToNext());
-				}
+				movies = cdb.getMovies(category, false);
 			}
 		}
 		
 		public int getCount() {return movies.size();}
-		public CategoryViewMovie getItem(int i){return movies.get(i);}
+		public DBMovie getItem(int i){return movies.get(i);}
 		public long getItemId(int i){return i;}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder holder;
@@ -103,20 +75,28 @@ public class CategoryView extends ListActivity {
 			}
 			
 			holder.movie = getItem(position);
-			holder.mTitle.setText(holder.movie.title);
-			holder.mDate.setText(holder.movie.createdTs);
+			holder.mTitle.setText(holder.movie.getTitle());
+			holder.mDate.setText(holder.movie.getFormattedDate());
 			
 			v.setTag(holder);
 			
 			return v;
 		}
 		
+		
 		public class ViewHolder {
-			CategoryViewMovie movie;
+			DBMovie movie;
 			TextView mTitle;
 			TextView mDate;
 		}
 	}
 	
-	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		
+		Intent i = new Intent(CategoryView.this, MoviePage.class);
+		i.putExtra("id", ((DBMovie)l.getItemAtPosition(position)).getId());
+		startActivity(i);
+	}
 }

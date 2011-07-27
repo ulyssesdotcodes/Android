@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Movie {
+public class GSONMovie {
 	@SerializedName("id")
 	private String id;
 

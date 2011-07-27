@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 public class CategoriesDbAdapter extends AbstractDbAdapter{
+
+	MoviesDbAdapter mdb;
 	
 	public static final String TABLE_NAME = "categories";
 	public static final String MOVIE_ID = "movie_id";
@@ -23,10 +25,9 @@ public class CategoriesDbAdapter extends AbstractDbAdapter{
 			MOVIE_TITLE+" text not null, "+
 			CATEGORY+" text not null);";
 
-
-	public CategoriesDbAdapter(Context ctx) {
+	public CategoriesDbAdapter(Context ctx, MoviesDbAdapter mdb) {
 		super(ctx);
-		// TODO Auto-generated constructor stub
+		this.mdb = mdb;
 	}
 	
 	public long insertmovie(String id, String title, ArrayList<String> categories){
@@ -48,24 +49,83 @@ public class CategoriesDbAdapter extends AbstractDbAdapter{
 			return -1;
 		}
 	}
+	
+	public boolean removeMovieCategories(String id){
+		try{
+			String where = MOVIE_ID + " = ?";
+			String[] whereArgs = {id};
+			
+			return mDb.delete(TABLE_NAME, where, whereArgs) > 0;
+		} catch(SQLiteException e){
+			Log.v("Insert into database failed", e.getMessage());
+			return false;
+		}
+	}
+	
+	public long insertMovieCategory(String id, String title, String category){
+		try{
+			ContentValues cvs = new ContentValues();
+			long result = -1;
+			
+			cvs.put(MOVIE_ID, id);
+			cvs.put(MOVIE_TITLE, title.trim());
+			cvs.put(CATEGORY, category.trim());
+			result = mDb.insert(TABLE_NAME, null, cvs);
+			
+			return result;
+		} catch(SQLiteException e){
+			Log.v("Insert into database failed", e.getMessage());
+			return -1;
+		}
+	}
+	
+	public boolean removeMovieCategory(String id, String category){
+		try{
+			String where = MOVIE_ID + " = ? AND " + CATEGORY + " = ?";
+			String[] whereArgs = {id, category};
+			
+			return mDb.delete(TABLE_NAME, where, whereArgs) > 0;
+		} catch(SQLiteException e){
+			Log.v("Insert into database failed", e.getMessage());
+			return false;
+		}
+	}
+	
+	
 	public Cursor getAllCategories(){
 		String[] columns = {CATEGORY};
 		Cursor c = mDb.query(TABLE_NAME, columns, null, null, null, null, null);
 		return c;
 	}
 	
-	public Cursor getCategoriesForMovie(String movie){
+	public ArrayList<String> getCategoriesForMovie(String movieId){
 		String[] columns = {CATEGORY};
-		String selection = MOVIE_TITLE + " = ?";
-		String[] selectionArgs = {movie};
-		Cursor c = mDb.query(TABLE_NAME, columns, selection, null, null, null, null);
-		return c;
+		String selection = MOVIE_ID + " = ?";
+		String[] selectionArgs = {movieId};
+		Cursor c = mDb.query(TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+		ArrayList<String> categories = new ArrayList<String>();
+		if(c.moveToFirst()){
+			do{
+				categories.add(c.getString(c.getColumnIndex(CATEGORY)));
+			}while(c.moveToNext());
+			return categories;
+		} else {
+			return null;
+		}
 	}
 	
-	public Cursor getMovies(String category){
+	public ArrayList<DBMovie> getMovies(String category, boolean withJson){
 		String[] columns = {MOVIE_ID, MOVIE_TITLE};
 		String[] selectionArgs = {category};
 		Cursor c = mDb.query(TABLE_NAME, columns, CATEGORY+" = ?", selectionArgs, null, null, null);
-		return c;
+		ArrayList<DBMovie> movies = new ArrayList<DBMovie>();
+		if(c.moveToFirst()){
+			do{
+				movies.add(mdb.getMovieById(c.getString(c.getColumnIndex(CategoriesDbAdapter.MOVIE_ID)), withJson));
+			}while(c.moveToNext());
+			return movies;
+		} else {
+			return null;
+		}
 	}
 }

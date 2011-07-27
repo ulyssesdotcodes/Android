@@ -5,7 +5,7 @@ import org.json.JSONException;
 import android.net.Uri;
 
 import com.google.gson.Gson;
-import com.upopple.android.seethatmovie.data.Movie;
+import com.upopple.android.seethatmovie.data.GSONMovie;
 
 
 public class RottenTomatoesAPI{
@@ -26,13 +26,13 @@ public class RottenTomatoesAPI{
 		return movieSearch;
 	}
 	
-	public static Movie getMovieById(String id) throws JSONException{
+	public static GSONMovie getMovieById(String id) throws JSONException{
 		String url = "http://api.rottentomatoes.com/api/public/v1.0/movies/"+id+".json?apikey="+api_key;
 		
-		Movie movie;
+		GSONMovie movie;
 		Gson gson = new Gson();
 		try {
-			movie = gson.fromJson(RestJsonClient.connect(url), Movie.class);
+			movie = gson.fromJson(RestJsonClient.connect(url), GSONMovie.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			return null;

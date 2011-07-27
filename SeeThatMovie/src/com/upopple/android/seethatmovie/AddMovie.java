@@ -30,8 +30,9 @@ public class AddMovie extends Activity {
 	AddMovieTextWatcher textWatch;
 	
 	CheckBox toSee;
-	
-	private static final int CATEGORY_ERROR_UNDERSCORE = 1001;
+
+	private static final int CATEGORY_SELECT = 1001;
+	private static final int CATEGORY_ERROR_UNDERSCORE = 1101;
 	Dialog inputError;
 	
 	ArrayList<String> movieList;
@@ -49,7 +50,7 @@ public class AddMovie extends Activity {
 		mdb = new MoviesDbAdapter(this);
 		mdb.open();
 
-		cdb = new CategoriesDbAdapter(this);
+		cdb = mdb.getCdbAdapter();
 		cdb.open();
 		
 		textWatch = new AddMovieTextWatcher();
@@ -124,6 +125,7 @@ public class AddMovie extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
+						categoryAuto.getText().delete(0, 1);
 					}
 				});
 			inputError = builder.create();
