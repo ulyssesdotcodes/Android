@@ -1,6 +1,9 @@
 package com.upopple.android.seethatmovie.data;
 
+import java.util.ArrayList;
+
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -31,6 +34,16 @@ public abstract class AbstractDbAdapter {
 	
 	public void close(){
 		mDbHelper.close();
+	}
+	
+	public ArrayList<String> stringCursorToArrayList(Cursor c){
+		ArrayList<String> sAr = new ArrayList<String>();
+		if(c.moveToFirst()){
+			do{
+				sAr.add(c.getString(c.getColumnIndex(CategoriesDbAdapter.CATEGORY)));
+			} while(c.moveToNext());
+		}
+		return sAr;
 	}
 	
 	protected static class DatabaseHelper extends SQLiteOpenHelper{

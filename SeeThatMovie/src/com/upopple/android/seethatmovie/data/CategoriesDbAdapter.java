@@ -1,12 +1,12 @@
 package com.upopple.android.seethatmovie.data;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
-
-import com.upopple.android.seethatmovie.util.Constants;
 
 public class CategoriesDbAdapter extends AbstractDbAdapter{
 	
@@ -29,16 +29,15 @@ public class CategoriesDbAdapter extends AbstractDbAdapter{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public long insertmovie(String id, String title, String categoriesString){
+	public long insertmovie(String id, String title, ArrayList<String> categories){
 		try{
 			ContentValues cvs = new ContentValues();
 			long result = -1;
 			
-			String[] categories = categoriesString.split(",");
 			for(String category: categories){
-				cvs.put(MOVIE_ID, title);
-				cvs.put(MOVIE_TITLE, title);
-				cvs.put(CATEGORY, category);
+				cvs.put(MOVIE_ID, id);
+				cvs.put(MOVIE_TITLE, title.trim());
+				cvs.put(CATEGORY, category.trim());
 				result = mDb.insert(TABLE_NAME, null, cvs);
 				if(result == -1)
 					break;
@@ -49,10 +48,16 @@ public class CategoriesDbAdapter extends AbstractDbAdapter{
 			return -1;
 		}
 	}
-	
-	public Cursor getCategories(String movie){
+	public Cursor getAllCategories(){
 		String[] columns = {CATEGORY};
-		String selection = MOVIE_TITLE + " = " +movie;
+		Cursor c = mDb.query(TABLE_NAME, columns, null, null, null, null, null);
+		return c;
+	}
+	
+	public Cursor getCategoriesForMovie(String movie){
+		String[] columns = {CATEGORY};
+		String selection = MOVIE_TITLE + " = ?";
+		String[] selectionArgs = {movie};
 		Cursor c = mDb.query(TABLE_NAME, columns, selection, null, null, null, null);
 		return c;
 	}

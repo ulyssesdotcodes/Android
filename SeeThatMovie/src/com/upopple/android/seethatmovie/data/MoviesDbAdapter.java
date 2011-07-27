@@ -1,10 +1,7 @@
 package com.upopple.android.seethatmovie.data;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-
-import com.google.gson.Gson;
-import com.upopple.android.seethatmovie.util.Constants;
-import com.upopple.android.seethatmovie.web.RottenTomatoesAPIAsync;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,13 +9,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.upopple.android.seethatmovie.web.RottenTomatoesAPIAsync;
+
 public class MoviesDbAdapter extends AbstractDbAdapter{
 	
 	CategoriesDbAdapter cdbAdapter;
 
 	public static final String TABLE_NAME = "movies";
 	public static final String TITLE = "title";
-	public static final String CATEGORIES = "categories";
 	public static final String API_ID = "movie_id";
 	public static final String JSON_DATA = "movie_json";
 	public static final String DATE_ADDED = "createdTs";
@@ -28,7 +27,6 @@ public class MoviesDbAdapter extends AbstractDbAdapter{
 			MoviesDbAdapter.TABLE_NAME+" ("+
 			MoviesDbAdapter.KEY_ID+" integer primary key autoincrement, "+
 			MoviesDbAdapter.TITLE+" text not null, "+
-			MoviesDbAdapter.CATEGORIES+" text not null, "+
 			MoviesDbAdapter.JSON_DATA+" text, "+
 			MoviesDbAdapter.DATE_ADDED + " long);";
 	
@@ -39,12 +37,11 @@ public class MoviesDbAdapter extends AbstractDbAdapter{
 	}
 	
 
-	public long insertmovie(String id, String title, String categories){
+	public long insertmovie(String id, String title, ArrayList<String> categories){
 		try{
 			ContentValues cvs = new ContentValues();
 			
-			cvs.put(TITLE, title);
-			cvs.put(CATEGORIES, categories);
+			cvs.put(TITLE, title.trim());
 			Movie movie = (Movie)new RottenTomatoesAPIAsync().execute(new String[]{""+RottenTomatoesAPIAsync.GET_MOVIE_BY_ID, id}).get();
 			Gson gson = new Gson();
 			if(movie!=null)

@@ -22,12 +22,11 @@ public class CategoryView extends ListActivity {
 	CategoriesDbAdapter cdb;
 	CategoryViewAdapter categoryViewAdapter;
 	private class CategoryViewMovie{
-		public CategoryViewMovie(String title, String cat, String date){
+		public CategoryViewMovie(String title, String date){
 			this.title = title;
-			this.categories = cat;
 			this.createdTs = date;
 		}
-		public String title, categories, createdTs;
+		public String title, createdTs;
 	}
 	
 	@Override
@@ -57,13 +56,13 @@ public class CategoryView extends ListActivity {
 		public void getdata(String category){
 			if(category.equals("")){
 				Cursor c = mdb.getMovies();
+				startManagingCursor(c);
 				if(c.moveToFirst()){
 					do{
 						String title = c.getString(c.getColumnIndex(MoviesDbAdapter.TITLE));
-						String categories = c.getString(c.getColumnIndex(MoviesDbAdapter.CATEGORIES));
 						DateFormat dateFormat = DateFormat.getDateTimeInstance();
 						String dateData = dateFormat.format(new Date(c.getLong(c.getColumnIndex(MoviesDbAdapter.DATE_ADDED))));
-						CategoryViewMovie temp = new CategoryViewMovie(title, categories, dateData);
+						CategoryViewMovie temp = new CategoryViewMovie(title, dateData);
 						movies.add(temp);
 					} while(c.moveToNext());
 				}	
@@ -73,12 +72,12 @@ public class CategoryView extends ListActivity {
 				if(categoryCursor.moveToFirst()){
 					do{
 						Cursor c = mdb.getMovieById(categoryCursor.getString(categoryCursor.getColumnIndex(CategoriesDbAdapter.MOVIE_ID)));
+						startManagingCursor(c);
 						if(c.moveToFirst()){
 							String title = c.getString(c.getColumnIndex(MoviesDbAdapter.TITLE));
-							String categories = c.getString(c.getColumnIndex(MoviesDbAdapter.CATEGORIES));
 							DateFormat dateFormat = DateFormat.getDateTimeInstance();
 							String dateData = dateFormat.format(new Date(c.getLong(c.getColumnIndex(MoviesDbAdapter.DATE_ADDED))));
-							CategoryViewMovie temp = new CategoryViewMovie(title, categories, dateData);
+							CategoryViewMovie temp = new CategoryViewMovie(title, dateData);
 							movies.add(temp);
 						}
 					} while(categoryCursor.moveToNext());
@@ -96,7 +95,8 @@ public class CategoryView extends ListActivity {
 				v = li.inflate(R.layout.movierow, null);
 				holder = new ViewHolder();
 				holder.mTitle = (TextView)v.findViewById(R.id.name);
-				holder.mCategories = (TextView)v.findViewById(R.id.categoriesText);
+				holder.mDate = (TextView)v.findViewById(R.id.dateAdded);
+				
 				v.setTag(holder);
 			} else {
 				holder = (ViewHolder) v.getTag();
@@ -104,7 +104,7 @@ public class CategoryView extends ListActivity {
 			
 			holder.movie = getItem(position);
 			holder.mTitle.setText(holder.movie.title);
-			holder.mCategories.setText(holder.movie.categories);
+			holder.mDate.setText(holder.movie.createdTs);
 			
 			v.setTag(holder);
 			
@@ -114,7 +114,7 @@ public class CategoryView extends ListActivity {
 		public class ViewHolder {
 			CategoryViewMovie movie;
 			TextView mTitle;
-			TextView mCategories;
+			TextView mDate;
 		}
 	}
 	
