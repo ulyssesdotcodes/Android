@@ -8,6 +8,7 @@ public class Constants {
 	public static final String MOVIE_TITLE = "title";
 	public static final String MOVIE_CATEGORIES = "categories";
 	public static final String MOVIE_API_ID = "movie_id";
+	public static final String MOVIE_JSON_DATA = "movie_json";
 	public static final String DATE_ADDED = "createdTs";
 	public static final String KEY_ID = "_id";
 

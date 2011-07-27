@@ -1,29 +1,17 @@
 package com.upopple.android.seethatmovie.web;
 
-import java.io.IOException;
-
 import org.json.JSONException;
 
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
+import com.upopple.android.seethatmovie.data.Movie;
 
 
-public class RottenTomatoesAPI extends AsyncTask<String, Void, RTMovieResults>{
+public class RottenTomatoesAPI{
 	public static final String api_key = "464f28afyq7r9bgk9nrqaetm";
 	
-	protected RTMovieResults doInBackground(String...searches){
-		try{
-			return getMovieTitles(searches[0]);
-		} catch(JSONException e){
-			Log.v("Error getting movies.", e.getMessage());
-			return null;
-		}
-	}
-	
-	public RTMovieResults getMovieTitles(String search) throws JSONException{
+	public static RTMovieResults getMovieTitles(String search) throws JSONException{
 		String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?apikey="+api_key+"&q="+Uri.encode(search)+"&page_limit=10";
 		
 		RTMovieResults movieSearch;
@@ -38,7 +26,18 @@ public class RottenTomatoesAPI extends AsyncTask<String, Void, RTMovieResults>{
 		return movieSearch;
 	}
 	
-	protected void onPostExecute(RTMovieResults result) {
+	public static Movie getMovieById(String id) throws JSONException{
+		String url = "http://api.rottentomatoes.com/api/public/v1.0/movies/"+id+".json?apikey="+api_key;
 		
-    }
+		Movie movie;
+		Gson gson = new Gson();
+		try {
+			movie = gson.fromJson(RestJsonClient.connect(url), Movie.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+		
+		return movie;
+	}
 }

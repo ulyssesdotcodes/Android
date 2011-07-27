@@ -36,7 +36,7 @@ public class Movie {
 	private String availableOn;
 	
 	
-	private ArrayList<String> categories, cast;
+	private ArrayList<String> cast;
 
 	private class Ratings{
 		private String critics_rating;
@@ -168,14 +168,6 @@ public class Movie {
 
 	public void setAvailableOn(String availableOn) {
 		this.availableOn = availableOn;
-	}
-
-	public ArrayList<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(ArrayList<String> categories) {
-		this.categories = categories;
 	}
 
 	public ArrayList<String> getCast() {

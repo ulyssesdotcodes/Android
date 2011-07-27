@@ -3,13 +3,10 @@ package com.upopple.android.seethatmovie;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import org.json.JSONException;
-
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +17,7 @@ import android.widget.TextView;
 import com.upopple.andoid.seethatmovie.R;
 import com.upopple.android.seethatmovie.web.RTMovieResult;
 import com.upopple.android.seethatmovie.web.RTMovieResults;
-import com.upopple.android.seethatmovie.web.RottenTomatoesAPI;
+import com.upopple.android.seethatmovie.web.RottenTomatoesAPIAsync;
 
 public class MovieSearchResults extends ListActivity {
 	SearchAdapter searchAdapter;
@@ -31,12 +28,17 @@ public class MovieSearchResults extends ListActivity {
 		setContentView(R.layout.movie_search_results);
 		super.onCreate(savedInstanceState);
 		
-		listDescription = (TextView)findViewById(R.id.categoryListText);
+		listDescription = (TextView)findViewById(R.id.categoryListText);	
+	}
+	
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
 		
 		Intent i = getIntent();
 		String search = i.getStringExtra("search");
 		searchAdapter = new SearchAdapter(this, search);
-		this.setListAdapter(searchAdapter);	
+		this.setListAdapter(searchAdapter);
 	}
 	
 	private class SearchAdapter extends BaseAdapter{
@@ -47,7 +49,7 @@ public class MovieSearchResults extends ListActivity {
 			li = LayoutInflater.from(context);
 			
 			try {
-				movieResults = new RottenTomatoesAPI().execute(search).get();
+				movieResults = (RTMovieResults)new RottenTomatoesAPIAsync().execute(new String[]{""+RottenTomatoesAPIAsync.GET_MOVIE_TITLES, search}).get();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

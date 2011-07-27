@@ -15,11 +15,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.upopple.andoid.seethatmovie.R;
+import com.upopple.android.seethatmovie.data.CategoryDB;
 import com.upopple.android.seethatmovie.data.MovieDB;
 import com.upopple.android.seethatmovie.util.Constants;
 
 public class CategoryView extends ListActivity {
 	MovieDB mdb;
+	CategoryDB cdb;
 	CategoryViewAdapter categoryViewAdapter;
 	private class CategoryViewMovie{
 		public CategoryViewMovie(String title, String cat, String date){
@@ -34,6 +36,9 @@ public class CategoryView extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		mdb = new MovieDB(this);
 		mdb.open();
+		
+		cdb = new CategoryDB(this);
+		cdb.open();
 		setContentView(R.layout.category_view);
 		
 		super.onCreate(savedInstanceState);
@@ -52,17 +57,34 @@ public class CategoryView extends ListActivity {
 		}
 		
 		public void getdata(String category){
-			Cursor c = mdb.getMovies();
-			startManagingCursor(c);
-			if(c.moveToFirst()){
-				do{
-					String title = c.getString(c.getColumnIndex(Constants.MOVIE_TITLE));
-					String categories = c.getString(c.getColumnIndex(Constants.MOVIE_CATEGORIES));
-					DateFormat dateFormat = DateFormat.getDateTimeInstance();
-					String dateData = dateFormat.format(new Date(c.getLong(c.getColumnIndex(Constants.DATE_ADDED))));
-					CategoryViewMovie temp = new CategoryViewMovie(title, categories, dateData);
-					movies.add(temp);
-				} while(c.moveToNext());
+			if(category.equals("")){
+				Cursor c = mdb.getMovies();
+				if(c.moveToFirst()){
+					do{
+						String title = c.getString(c.getColumnIndex(Constants.MOVIE_TITLE));
+						String categories = c.getString(c.getColumnIndex(Constants.MOVIE_CATEGORIES));
+						DateFormat dateFormat = DateFormat.getDateTimeInstance();
+						String dateData = dateFormat.format(new Date(c.getLong(c.getColumnIndex(Constants.DATE_ADDED))));
+						CategoryViewMovie temp = new CategoryViewMovie(title, categories, dateData);
+						movies.add(temp);
+					} while(c.moveToNext());
+				}	
+			} else {
+				Cursor categoryCursor = cdb.getMovies(category);
+				startManagingCursor(categoryCursor);
+				if(categoryCursor.moveToFirst()){
+					do{
+						Cursor c = mdb.getMovieById(categoryCursor.getString(categoryCursor.getColumnIndex(Constants.CATEGORIES_MOVIE_ID)));
+						if(c.moveToFirst()){
+							String title = c.getString(c.getColumnIndex(Constants.MOVIE_TITLE));
+							String categories = c.getString(c.getColumnIndex(Constants.MOVIE_CATEGORIES));
+							DateFormat dateFormat = DateFormat.getDateTimeInstance();
+							String dateData = dateFormat.format(new Date(c.getLong(c.getColumnIndex(Constants.DATE_ADDED))));
+							CategoryViewMovie temp = new CategoryViewMovie(title, categories, dateData);
+							movies.add(temp);
+						}
+					} while(categoryCursor.moveToNext());
+				}
 			}
 		}
 		

@@ -30,6 +30,7 @@ public class AddMovie extends Activity {
 		mdb = new MovieDB(this);
 		mdb.open();
 		
+		
 		Intent i = getIntent();
 		titleBox = (TextView)findViewById(R.id.movieTitle);
 		titleBox.setText(i.getStringExtra("movieTitle"));
@@ -51,8 +52,11 @@ public class AddMovie extends Activity {
 	
 	public void saveItToDb(){
 		String movieId = getIntent().getStringExtra("movieId");
-		if(movieId.equals(""))
-			mdb.insertmovie(titleBox.getText().toString(), categoryET.getText().toString());
+		String movieTitle = titleBox.getText().toString();
+		String movieCategories = categoryET.getText().toString();
+
+		mdb.insertmovie(movieId, movieTitle, movieCategories);
+			
 		mdb.close();
 		titleBox.setText("");
 		categoryET.setText("");

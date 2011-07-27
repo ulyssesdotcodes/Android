@@ -1,5 +1,7 @@
 package com.upopple.android.seethatmovie.data;
 
+import java.util.concurrent.ExecutionException;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.upopple.android.seethatmovie.util.Constants;
+import com.upopple.android.seethatmovie.web.RottenTomatoesAPIAsync;
 
 public class MovieDB {
 	private SQLiteDatabase db;
@@ -34,13 +38,16 @@ public class MovieDB {
 		}
 	}
 	
-	public long insertmovie(String title, String categories){
+	public long insertmovie(String id, String title, String categories){
 		try{
 			ContentValues cvs = new ContentValues();
 			
 			cvs.put(Constants.MOVIE_TITLE, title);
 			cvs.put(Constants.MOVIE_CATEGORIES, categories);
-			cvs.put(Constants.MOVIE_CATEGORIES, categories);
+			Movie movie = (Movie)new RottenTomatoesAPIAsync().execute(new String[]{""+RottenTomatoesAPIAsync.GET_MOVIE_BY_ID, id}).get();
+			Gson gson = new Gson();
+			if(movie!=null)
+				cvs.put(Constants.MOVIE_JSON_DATA, gson.toJson(movie));
 			cvs.put(Constants.DATE_ADDED, java.lang.System.currentTimeMillis());
 			long result = db.insert(Constants.MOVIE_TABLE_NAME, null, cvs);
 			
@@ -52,6 +59,12 @@ public class MovieDB {
 		} catch(SQLiteException e){
 			Log.v("Insert into database failed", e.getMessage());
 			return -1;
+		} catch (InterruptedException e) {
+			Log.v("Insert into database failed", e.getMessage());
+			return -1;
+		} catch (ExecutionException e) {
+			Log.v("Insert into database failed", e.getMessage());
+			return -1;
 		}
 	}
 	
@@ -60,7 +73,7 @@ public class MovieDB {
 		return c;
 	}
 	
-	public Cursor getMovies(String id){
+	public Cursor getMovieById(String id){
 		String selection = Constants.KEY_ID + " = " + id;
 		Cursor c = db.query(Constants.MOVIE_TABLE_NAME, null, selection, null, null, null, null);
 		return c;
