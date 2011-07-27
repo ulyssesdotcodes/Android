@@ -39,9 +39,9 @@ public class CategoryView extends ListActivity {
 		this.setListAdapter(categoryViewAdapter);
 	}
 	
-	private class CategoryViewAdapter extends BaseAdapter{
-		private LayoutInflater li;
-		private ArrayList<DBMovie> movies;
+	protected class CategoryViewAdapter extends BaseAdapter{
+		protected LayoutInflater li;
+		protected ArrayList<DBMovie> movies;
 		
 		public CategoryViewAdapter(Context context, String category){
 			li = LayoutInflater.from(context);
