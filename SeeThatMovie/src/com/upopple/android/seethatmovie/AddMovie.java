@@ -122,7 +122,6 @@ public class AddMovie extends Activity {
 			builder.setMessage("Sorry! The category name cannot start with a _ (underscore).")
 				.setCancelable(true)
 				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-					
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
 						categoryAuto.getText().delete(0, 1);

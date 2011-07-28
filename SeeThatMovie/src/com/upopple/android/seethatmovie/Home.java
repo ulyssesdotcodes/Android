@@ -25,13 +25,16 @@ import com.upopple.android.seethatmovie.data.DBMovie;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class Home extends ListActivity {
-	private static final int DIALOG_ADD_MOVIE = 0;
+	private static final int DIALOG_NO_SEARCH = 0;
 	
 	private MoviesDbAdapter mdb;
 	private CategoriesDbAdapter cdb;
 	private HomeAdapter homeAdapter;
 	
 	private Button homeBtnAdd;
+	private EditText addMovieSearch;
+
+	private Button homeBtnViewAll;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,21 +43,40 @@ public class Home extends ListActivity {
 		
 		cdb = mdb.getCdbAdapter();
 		cdb.open();
+		
 		setContentView(R.layout.main);
 		
 		super.onCreate(savedInstanceState);
+
+		addMovieSearch = (EditText)findViewById(R.id.add_movie_search);
 		
 		homeAdapter = new HomeAdapter(this);
 		this.setListAdapter(homeAdapter);
 		
 		homeBtnAdd = (Button) findViewById(R.id.home_btn_add);
 		homeBtnAdd.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
-				
+				String searchText = addMovieSearch.getText().toString();
+				if(!searchText.equals("")){
+					Intent i = new Intent(Home.this, MovieSearchResults.class);
+					i.putExtra("search", searchText);
+					startActivity(i);
+				} else {
+					showDialog(DIALOG_NO_SEARCH);
+				}
 			}
 		});
+		
+		homeBtnViewAll = (Button) findViewById(R.id.home_btn_view_all);
+		homeBtnViewAll.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Home.this, CategoryView.class);
+				startActivity(i);
+			}
+		});
+		
 	}
 	
 	@Override
@@ -62,22 +84,10 @@ public class Home extends ListActivity {
 		Dialog dialog;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch(id){
-		case DIALOG_ADD_MOVIE: 
-			builder.setView(findViewById(R.id.addMovieDialogContent))
+		case DIALOG_NO_SEARCH:
+			builder.setMessage("Add a movie with a title!")
 				.setCancelable(true)
-				.setPositiveButton("Find", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						Intent i = new Intent(Home.this, MovieSearchResults.class);
-						EditText search = (EditText)findViewById(R.id.addMovieSearch);
-						i.putExtra("search", search.getText().toString());
-					}
-					
-				})
-				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					
-					@Override
+				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
 					}
@@ -135,6 +145,7 @@ public class Home extends ListActivity {
 					public void onClick(View v) {
 						if(holder.mCheck.isChecked()){
 							cdb.removeMovieCategory(holder.movie.getId(), "_toSee");
+							v.setEnabled(false);
 						} else {
 							cdb.insertMovieCategory(holder.movie.getId(), holder.movie.getTitle(), "_toSee");
 						}

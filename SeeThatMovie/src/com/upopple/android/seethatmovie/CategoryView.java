@@ -25,6 +25,8 @@ public class CategoryView extends ListActivity {
 	protected CategoriesDbAdapter cdb;
 	protected CategoryViewAdapter categoryViewAdapter;
 	
+	private TextView listTitle;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mdb = new MoviesDbAdapter(this);
@@ -35,6 +37,9 @@ public class CategoryView extends ListActivity {
 		setContentView(R.layout.category_view);
 		
 		super.onCreate(savedInstanceState);
+		
+		listTitle = (TextView) findViewById(R.id.categoryViewText);
+		
 		if(categoryViewAdapter == null) categoryViewAdapter = new CategoryViewAdapter(this, this.getIntent().getStringExtra("category"));
 		this.setListAdapter(categoryViewAdapter);
 	}
@@ -50,10 +55,12 @@ public class CategoryView extends ListActivity {
 		}
 		
 		public void getdata(String category){
-			if(category.equals("")){
+			if(category == null || category.equals("")){
 				movies = mdb.getMovies(false);
+				listTitle.setText("All Movies");
 			} else {
 				movies = cdb.getMovies(category, false);
+				listTitle.setText(category + " Movies");
 			}
 		}
 		
