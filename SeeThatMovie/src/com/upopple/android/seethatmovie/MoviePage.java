@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -55,16 +57,16 @@ public class MoviePage extends Activity{
 		if(inToSee){
 			toSee.setChecked(true);
 		}
-	}
-	
-	@Override
-	protected void onStop() {
-		if(!inToSee || toSee.isChecked())
-			cdb.insertMovieCategory(thisMovie.getId(), thisMovie.getTitle(), "_toSee");
-		else if(inToSee && !toSee.isChecked())
-			cdb.removeMovieCategory(thisMovie.getId(), "_toSee");
 		
-		super.onStop();
+		toSee.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				if(!inToSee || toSee.isChecked())
+					cdb.insertMovieCategory(thisMovie.getId(), thisMovie.getTitle(), "_toSee");
+				else if(inToSee && !toSee.isChecked())
+					cdb.removeMovieCategory(thisMovie.getId(), "_toSee");
+			}
+		});
 	}
 	
 	private boolean hasCategory(String cat){
