@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ public class ToSeeView extends CategoryView{
 	private class ToSeeViewAdapter extends CategoryView.CategoryViewAdapter{
 
 		public ToSeeViewAdapter(Context context, String category) {
-			super(context, category);
+			super(context, "_toSee");
 		}
 		
 		@Override
@@ -43,6 +44,19 @@ public class ToSeeView extends CategoryView{
 				holder = new ViewHolder();
 				holder.mTitle = (TextView)v.findViewById(R.id.name);
 				holder.mCheck = (CheckBox)v.findViewById(R.id.toSeeSawItCheck);
+				
+				holder.mCheck.setOnClickListener(new OnClickListener() {
+					
+					public void onClick(View v) {
+						if(holder.mCheck.isChecked()){
+							cdb.removeMovieCategory(holder.movie.getId(), "_toSee");
+							v.setEnabled(false);
+						} else {
+							cdb.insertMovieCategory(holder.movie.getId(), holder.movie.getTitle(), "_toSee");
+							v.setEnabled(true);
+						}
+					}
+				});
 				
 				v.setTag(holder);
 			} else {

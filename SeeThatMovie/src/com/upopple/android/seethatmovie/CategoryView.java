@@ -21,9 +21,9 @@ import com.upopple.android.seethatmovie.data.DBMovie;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class CategoryView extends ListActivity {
-	MoviesDbAdapter mdb;
-	CategoriesDbAdapter cdb;
-	CategoryViewAdapter categoryViewAdapter;
+	protected MoviesDbAdapter mdb;
+	protected CategoriesDbAdapter cdb;
+	protected CategoryViewAdapter categoryViewAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class CategoryView extends ListActivity {
 		setContentView(R.layout.category_view);
 		
 		super.onCreate(savedInstanceState);
-		categoryViewAdapter = new CategoryViewAdapter(this, this.getIntent().getStringExtra("category"));
+		if(categoryViewAdapter == null) categoryViewAdapter = new CategoryViewAdapter(this, this.getIntent().getStringExtra("category"));
 		this.setListAdapter(categoryViewAdapter);
 	}
 	
@@ -94,9 +94,10 @@ public class CategoryView extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		
-		Intent i = new Intent(CategoryView.this, MoviePage.class);
-		i.putExtra("id", ((DBMovie)l.getItemAtPosition(position)).getId());
-		startActivity(i);
+		if(v.isEnabled()){
+			Intent i = new Intent(CategoryView.this, MoviePage.class);
+			i.putExtra("id", ((DBMovie)l.getItemAtPosition(position)).getId());
+			startActivity(i);
+		}
 	}
 }

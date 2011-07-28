@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SeeThatMovie</string>
-    <dimen name="default_padding">10dp</dimen>
+    <string name="btn_add_movie">Add Movie</string>
+    <string name="btn_to_see">To See</string>
+    <string name="btn_category_list">Category</string>
+    <string name="btn_view_all">All Movies</string>
+    <string name="title_to_see">Movies To See</string>
+    <string name="home_no_movies">Congrats! You\'ve watched all the movies on your list. Click &quot;Add Movie&quot; to add another.</string>
 </resources>
