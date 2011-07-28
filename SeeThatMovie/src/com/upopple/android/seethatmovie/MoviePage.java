@@ -84,7 +84,7 @@ public class MoviePage extends Activity{
 			builder.setMessage("Are you sure you want to delete this movie?")
 				.setCancelable(true)
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					@Override
+					
 					public void onClick(DialogInterface dialog, int which) {
 						mdb.removeMovie(thisMovie.getId());
 						startActivity(new Intent(MoviePage.this, SeeThatMovieActivity.class));
@@ -101,7 +101,7 @@ public class MoviePage extends Activity{
 			builder.setMessage("Oh no! Something broke.")
 				.setCancelable(true)
 				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-					@Override
+					
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
 					}

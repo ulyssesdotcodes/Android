@@ -122,7 +122,7 @@ public class AddMovie extends Activity {
 			builder.setMessage("Sorry! The category name cannot start with a _ (underscore).")
 				.setCancelable(true)
 				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-					@Override
+					
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
 						categoryAuto.getText().delete(0, 1);
@@ -134,7 +134,7 @@ public class AddMovie extends Activity {
 			builder.setMessage("Oh no! Something broke.")
 				.setCancelable(true)
 				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-					@Override
+					
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
 					}
@@ -147,21 +147,21 @@ public class AddMovie extends Activity {
 	
 	private class AddMovieTextWatcher implements TextWatcher{
 
-		@Override
+		
 		public void afterTextChanged(Editable e) {
 			if(e.toString().startsWith("_")){
 				showDialog(CATEGORY_ERROR_UNDERSCORE);
 			}
 		}
 
-		@Override
+		
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
 			// TODO Auto-generated method stub
 			
 		}
 
-		@Override
+		
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			// TODO Auto-generated method stub
