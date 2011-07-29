@@ -102,10 +102,27 @@ public class MoviesDbAdapter extends AbstractDbAdapter{
 				long dateAdded = c.getLong(c.getColumnIndex(MoviesDbAdapter.DATE_ADDED));
 				movies.add(new DBMovie(id, title,json_data, dateAdded));
 			}while(c.moveToNext());
-			return movies;
-		} else {
-			return null;
 		}
+		return movies;
+	}
+	
+	public ArrayList<DBMovie> getMoviesExcludeCategory(String category, boolean withJson){
+		Cursor c = mDb.query(TABLE_NAME, null, null, null, null, null, null);
+		ArrayList<DBMovie> movies = new ArrayList<DBMovie>();
+		if(c.moveToFirst()){
+			do{
+				
+				String id = c.getString(c.getColumnIndex(MoviesDbAdapter.KEY_ID));
+				
+				if(!cdbAdapter.movieHasCategory(id, category)){
+					String title = c.getString(c.getColumnIndex(MoviesDbAdapter.TITLE));
+					String json_data = (withJson) ? c.getString(c.getColumnIndex(MoviesDbAdapter.JSON_DATA)) : "";
+					long dateAdded = c.getLong(c.getColumnIndex(MoviesDbAdapter.DATE_ADDED));
+					movies.add(new DBMovie(id, title,json_data, dateAdded));
+				}
+			}while(c.moveToNext());
+		}
+		return movies;
 	}
 	
 	public DBMovie getMovieById(String id, boolean withJson){

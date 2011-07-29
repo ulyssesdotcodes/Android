@@ -3,10 +3,10 @@
 	<item android:id="@+id/moviePageMenuHome"
 	      android:icon="@android:drawable/ic_menu_agenda"
 	      android:title="@string/btn_home" />
-	<item android:id="@+id/moviePageMenuDelete"
+	<item android:id="@+id/moviePageMenuAllMovies"
 	      android:icon="@android:drawable/ic_menu_delete"
 	      android:title="Delete" />
-	<item android:id="@+id/moviePageMenuEdit"
+	<item android:id="@+id/moviePageMenuCategory"
 	      android:icon="@android:drawable/ic_menu_edit"
 	      android:title="Edit" />
 	<item android:id="@+id/moviePageMenuHelp"

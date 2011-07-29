@@ -6,6 +6,6 @@
   android:layout_height="match_parent"
   android:padding="10dp">
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Movie Title" android:id="@+id/moviePageTitle" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
-    <CheckBox android:text=" Still need to see this movie." android:id="@+id/moviePageInToSee" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
+    <CheckBox android:text=" Seen it!" android:id="@+id/moviePageSeen" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
     
 </LinearLayout>

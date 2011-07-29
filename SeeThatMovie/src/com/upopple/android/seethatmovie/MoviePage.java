@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -25,12 +23,12 @@ public class MoviePage extends Activity{
 	CategoriesDbAdapter cdb;
 	DBMovie thisMovie;
 	ArrayList<String> categories;
-	boolean inToSee;
+	boolean seen;
 	
 	private static final int DELETE = 1001;
 	
 	TextView title;
-	CheckBox toSee;
+	CheckBox seenCheck;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -49,32 +47,14 @@ public class MoviePage extends Activity{
 		categories = cdb.getCategoriesForMovie(thisMovie.getId());
 		
 		title = (TextView) findViewById(R.id.moviePageTitle);
-		toSee = (CheckBox) findViewById(R.id.moviePageInToSee);
+		seenCheck = (CheckBox) findViewById(R.id.moviePageSeen);
 		
 		title.setText(thisMovie.getTitle());
 		
-		inToSee = hasCategory("_toSee");
-		if(inToSee){
-			toSee.setChecked(true);
+		seen = cdb.movieHasCategory(movieId, "_seen");
+		if(seen){
+			seenCheck.setChecked(true);
 		}
-		
-		toSee.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				if(!inToSee || toSee.isChecked())
-					cdb.insertMovieCategory(thisMovie.getId(), thisMovie.getTitle(), "_toSee");
-				else if(inToSee && !toSee.isChecked())
-					cdb.removeMovieCategory(thisMovie.getId(), "_toSee");
-			}
-		});
-	}
-	
-	private boolean hasCategory(String cat){
-		for(int i = 0; i < categories.size(); i++){
-			if(categories.get(i).equals(cat))
-				return true;
-		}
-		return false;
 	}
 	
 	@Override
@@ -114,6 +94,16 @@ public class MoviePage extends Activity{
 		return inputError;
 	}
 	
+	@Override
+	protected void onPause() {
+		if(seen && !seenCheck.isChecked())
+			cdb.removeMovieCategory(thisMovie.getId(), "_seen");
+		else if(!seen && seenCheck.isChecked())
+			cdb.insertMovieCategory(thisMovie.getId(), thisMovie.getTitle(), "_seen");
+		
+		super.onPause();
+	}
+	
 	//Menu logic
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,6 +116,9 @@ public class MoviePage extends Activity{
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    // Handle item selection
 	    switch (item.getItemId()) {
+	    case R.id.moviePageMenuHome:
+	        goHome();
+	        return true;
 	    case R.id.moviePageMenuEdit:
 	        editMovie();
 	        return true;
@@ -138,6 +131,10 @@ public class MoviePage extends Activity{
 	    default:
 	        return super.onOptionsItemSelected(item);
 	    }
+	}
+	
+	private void goHome(){
+		startActivity(new Intent(MoviePage.this, Home.class));
 	}
 
 	private void showHelp() {

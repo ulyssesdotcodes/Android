@@ -29,10 +29,10 @@ public class AddMovie extends Activity {
 	TextView titleBox;
 	AddMovieTextWatcher textWatch;
 	
-	CheckBox toSee;
+	CheckBox seenIt;
 
-	private static final int CATEGORY_SELECT = 1001;
-	private static final int CATEGORY_ERROR_UNDERSCORE = 1101;
+	private static final int CATEGORY_SELECT = 0;
+	private static final int CATEGORY_ERROR_UNDERSCORE = 100;
 	Dialog inputError;
 	
 	ArrayList<String> movieList;
@@ -72,7 +72,7 @@ public class AddMovie extends Activity {
 		categoryAuto.setAdapter(adapter);
 		categoryAuto.addTextChangedListener(textWatch);
 		
-		toSee = (CheckBox) findViewById(R.id.toSee);
+		seenIt = (CheckBox) findViewById(R.id.seenIt);
 		
 		addbutton = (Button)findViewById(R.id.addMovieButton);
 		addbutton.setOnClickListener(new OnClickListener() {
@@ -100,8 +100,8 @@ public class AddMovie extends Activity {
 			movieCategories.add(category.trim());
 		}
 		
-		if(toSee.isChecked())
-			movieCategories.add("_toSee");
+		if(seenIt.isChecked())
+			movieCategories.add("_seen");
 
 		mdb.insertmovie(movieId, movieTitle, movieCategories);
 			
@@ -118,6 +118,17 @@ public class AddMovie extends Activity {
 		Dialog inputError;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch(id){
+		case CATEGORY_SELECT: 
+			builder.setTitle("Add Categories")
+				.setCancelable(true)
+				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+						categoryAuto.getText().delete(0, 1);
+					}
+				});
+			inputError = builder.create();
+			break;
 		case CATEGORY_ERROR_UNDERSCORE: 
 			builder.setMessage("Sorry! The category name cannot start with a _ (underscore).")
 				.setCancelable(true)

@@ -30,7 +30,20 @@ public class CategoriesDbAdapter extends AbstractDbAdapter{
 		this.mdb = mdb;
 	}
 	
+	public boolean movieHasCategory(String id, String category){
+		try{
+			String[] columns = {CATEGORY};
+			String selection = MOVIE_ID + " = ? AND " + CATEGORY + " = ?" ;
+			String[] selectionArgs = {id, category};
+			
+			return mDb.query(TABLE_NAME, columns, selection, selectionArgs, null, null, null).getCount() > 0;
+		} catch(SQLiteException e){
+			return false;
+		}
+	}
+	
 	public long insertmovie(String id, String title, ArrayList<String> categories){
+		
 		try{
 			ContentValues cvs = new ContentValues();
 			long result = -1;
@@ -63,6 +76,9 @@ public class CategoriesDbAdapter extends AbstractDbAdapter{
 	}
 	
 	public long insertMovieCategory(String id, String title, String category){
+		if(movieHasCategory(id, category)){
+			return 1;
+		}
 		try{
 			ContentValues cvs = new ContentValues();
 			long result = -1;

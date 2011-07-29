@@ -112,7 +112,7 @@ public class DashboardLayout extends ViewGroup {
         int hSpace = 0;
         int vSpace = 0;
 
-        int cols = 3;
+        int cols = 1;
         int rows;
 
         while (true) {

@@ -7,7 +7,7 @@
   android:padding="@dimen/default_padding">
     <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/movieTitle"></TextView>
     <TextView android:text="TextView" android:id="@+id/movieCategoryText" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-    <CheckBox android:text="Add to To See list" android:id="@+id/toSee" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true"></CheckBox>
+    <CheckBox android:text=" Seen it!" android:id="@+id/seenIt" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
     <AutoCompleteTextView android:layout_height="wrap_content" android:text="Category" android:layout_width="match_parent" android:id="@+id/movieCategoryEdit">
         <requestFocus></requestFocus>
     </AutoCompleteTextView>

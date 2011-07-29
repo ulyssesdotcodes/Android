@@ -7,4 +7,5 @@
     <string name="btn_view_all">All Movies</string>
     <string name="title_to_see">Movies To See</string>
     <string name="home_no_movies">Congrats! You\'ve watched all the movies on your list. Click &quot;Add Movie&quot; to add another.</string>
+    <string name="btn_home">Home</string>
 </resources>

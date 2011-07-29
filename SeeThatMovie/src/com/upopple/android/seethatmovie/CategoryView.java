@@ -1,18 +1,18 @@
 package com.upopple.android.seethatmovie;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +24,9 @@ public class CategoryView extends ListActivity {
 	protected MoviesDbAdapter mdb;
 	protected CategoriesDbAdapter cdb;
 	protected CategoryViewAdapter categoryViewAdapter;
+	protected ArrayList<DBMovie> movies;
+	
+	protected String category;
 	
 	private TextView listTitle;
 	
@@ -46,7 +49,6 @@ public class CategoryView extends ListActivity {
 	
 	protected class CategoryViewAdapter extends BaseAdapter{
 		protected LayoutInflater li;
-		protected ArrayList<DBMovie> movies;
 		
 		public CategoryViewAdapter(Context context, String category){
 			li = LayoutInflater.from(context);
@@ -54,27 +56,53 @@ public class CategoryView extends ListActivity {
 			getdata(category);
 		}
 		
-		public void getdata(String category){
+		public void getdata(String cat){
+			category = cat;
 			if(category == null || category.equals("")){
-				movies = mdb.getMovies(false);
 				listTitle.setText("All Movies");
+				movies = mdb.getMovies(false);
 			} else {
-				movies = cdb.getMovies(category, false);
 				listTitle.setText(category + " Movies");
+				movies = cdb.getMovies(category, false);
+			}
+			if(movies == null){
+				movies = new ArrayList<DBMovie>();
+				TextView homeNoMovies = (TextView)findViewById(R.id.home_no_movies_to_see);
+				homeNoMovies.setVisibility(TextView.VISIBLE);
 			}
 		}
 		
 		public int getCount() {return movies.size();}
 		public DBMovie getItem(int i){return movies.get(i);}
 		public long getItemId(int i){return i;}
+		public void remove(int i){movies.remove(i);}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder holder;
 			View v = convertView;
 			if((v==null) || v.getTag() == null){
-				v = li.inflate(R.layout.movierow, null);
+				v = li.inflate(R.layout.checkboxrow, null);
 				holder = new ViewHolder();
 				holder.mTitle = (TextView)v.findViewById(R.id.name);
-				holder.mDate = (TextView)v.findViewById(R.id.dateAdded);
+				holder.mCheck = (CheckBox)v.findViewById(R.id.checkbox);
+				
+				holder.mCheck.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						if(holder.mCheck.isChecked()){
+							cdb.insertMovieCategory(holder.movie.getId(), holder.movie.getTitle(), "_seen");
+						} else {
+							cdb.removeMovieCategory(holder.movie.getId(), "_seen");
+						}
+					}
+				});
+				
+				v.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent i = new Intent(CategoryView.this, MoviePage.class);
+						i.putExtra("id", holder.movie.getId());
+						startActivity(i);
+					}
+				});
 				
 				v.setTag(holder);
 			} else {
@@ -82,19 +110,18 @@ public class CategoryView extends ListActivity {
 			}
 			
 			holder.movie = getItem(position);
+			holder.mCheck.setChecked(cdb.movieHasCategory(holder.movie.getId(), "_seen"));
 			holder.mTitle.setText(holder.movie.getTitle());
-			holder.mDate.setText(holder.movie.getFormattedDate());
 			
 			v.setTag(holder);
 			
 			return v;
 		}
 		
-		
 		public class ViewHolder {
 			DBMovie movie;
 			TextView mTitle;
-			TextView mDate;
+			CheckBox mCheck;
 		}
 	}
 	
@@ -106,5 +133,46 @@ public class CategoryView extends ListActivity {
 			i.putExtra("id", ((DBMovie)l.getItemAtPosition(position)).getId());
 			startActivity(i);
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(category == null || category.equals("")){
+			movies = mdb.getMovies(false);
+		} else {
+			movies = cdb.getMovies(category, false);
+		}
+		if(movies == null){
+			movies = new ArrayList<DBMovie>();
+		}
+		categoryViewAdapter.notifyDataSetChanged();
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.moviePageMenuHome:
+	        goHome();
+	        return true;
+	    case R.id.moviePageMenuCategory:
+	        return true;
+	    case R.id.moviePageMenuAllMovies:
+	        return true;
+	    case R.id.moviePageMenuHelp:
+	        showHelp();
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	private void goHome(){
+		startActivity(new Intent(CategoryView.this, Home.class));
+	}
+
+	private void showHelp() {
+		
 	}
 }

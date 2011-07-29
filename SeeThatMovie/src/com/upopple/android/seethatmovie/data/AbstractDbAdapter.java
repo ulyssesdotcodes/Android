@@ -9,10 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.upopple.android.seethatmovie.util.Constants;
-
 public abstract class AbstractDbAdapter {
-	private static final String LOG_TAG = AbstractDbAdapter.class.getSimpleName();
 	
 	public static final String DATABASE_NAME = "datastorage";
 	public static final int DATABASE_VERSION = 1;
