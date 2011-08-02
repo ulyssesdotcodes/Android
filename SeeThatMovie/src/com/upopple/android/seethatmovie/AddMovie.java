@@ -61,13 +61,7 @@ public class AddMovie extends Activity {
 		
 		categoryAuto = (AutoCompleteTextView)findViewById(R.id.movieCategoryEdit);
 		ArrayList<String> allCategories = new ArrayList<String>();
-		try{
-			Cursor c = cdb.getAllCategories();
-			startManagingCursor(c);
-			
-		} catch(SQLiteException e){
-			Log.v("Get All Categories Error", "Couldn't find any categories.");
-		}
+		allCategories.addAll(cdb.getAllCategories());
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, allCategories.toArray(new String[]{}));
 		categoryAuto.setAdapter(adapter);
 		categoryAuto.addTextChangedListener(textWatch);

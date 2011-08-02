@@ -38,8 +38,6 @@ public class RestJsonClient {
                 InputStream instream = entity.getContent();
 
                 reader = new InputStreamReader(instream);
-                
-                instream.close();
             }
 
         } catch (ClientProtocolException e) {

@@ -3,6 +3,7 @@ package com.upopple.android.seethatmovie.web;
 import org.json.JSONException;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.upopple.android.seethatmovie.data.GSONMovie;
@@ -20,6 +21,7 @@ public class RottenTomatoesAPI{
 			movieSearch = gson.fromJson(RestJsonClient.connect(url), RTMovieResults.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			Log.v("Error while getting results", e.getMessage());
 			return null;
 		}
 		

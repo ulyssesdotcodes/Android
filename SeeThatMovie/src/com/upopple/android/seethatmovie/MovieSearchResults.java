@@ -26,18 +26,20 @@ public class MovieSearchResults extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.movie_search_results);
 		super.onCreate(savedInstanceState);
-		
+
 		listDescription = (TextView)findViewById(R.id.categoryListText);	
+		
+		Intent i = getIntent();
+		String search = i.getStringExtra("search");
+		searchAdapter = new SearchAdapter(this, search);
+		this.setListAdapter(searchAdapter);
+		
 	}
 	
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		
-		Intent i = getIntent();
-		String search = i.getStringExtra("search");
-		searchAdapter = new SearchAdapter(this, search);
-		this.setListAdapter(searchAdapter);
 	}
 	
 	private class SearchAdapter extends BaseAdapter{

@@ -2,9 +2,13 @@ package com.upopple.android.seethatmovie;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,10 +26,14 @@ import com.upopple.android.seethatmovie.data.DBMovie;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class CategoryView extends ListActivity {
+	private static final int CATEGORY_SELECT = 0;
+	
 	protected MoviesDbAdapter mdb;
 	protected CategoriesDbAdapter cdb;
 	protected CategoryViewAdapter categoryViewAdapter;
 	protected ArrayList<DBMovie> movies;
+	protected ArrayList<String> categories;
+	
 	
 	protected String category;
 	
@@ -45,6 +54,8 @@ public class CategoryView extends ListActivity {
 		
 		if(categoryViewAdapter == null) categoryViewAdapter = new CategoryViewAdapter(this, this.getIntent().getStringExtra("category"));
 		this.setListAdapter(categoryViewAdapter);
+		
+		setUpBottomBar();
 	}
 	
 	protected class CategoryViewAdapter extends BaseAdapter{
@@ -96,7 +107,6 @@ public class CategoryView extends ListActivity {
 				});
 				
 				v.setOnClickListener(new OnClickListener() {
-					@Override
 					public void onClick(View v) {
 						Intent i = new Intent(CategoryView.this, MoviePage.class);
 						i.putExtra("id", holder.movie.getId());
@@ -133,6 +143,40 @@ public class CategoryView extends ListActivity {
 			i.putExtra("id", ((DBMovie)l.getItemAtPosition(position)).getId());
 			startActivity(i);
 		}
+	}
+	
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		switch(id){
+		case CATEGORY_SELECT:
+			builder.setTitle("View Movies From...")
+				.setCancelable(true)
+				.setItems(categories.toArray(new String[]{}), new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						Intent i = new Intent(CategoryView.this, CategoryView.class);
+						i.putExtra("category", categories.get(which));
+						startActivity(i);
+					}
+				});
+			dialog = builder.create();
+			break;
+		default:
+			builder.setMessage("Oh no! Something broke.")
+				.setCancelable(true)
+				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+			dialog = builder.create();
+			break;
+		}
+		return dialog;
 	}
 	
 	@Override
@@ -174,5 +218,42 @@ public class CategoryView extends ListActivity {
 
 	private void showHelp() {
 		
+	}
+	
+
+	private void setUpBottomBar(){
+		
+		Button bottomBtnHome, bottomBtnCategoryList, bottomBtnViewAll;
+		
+		bottomBtnHome = (Button) findViewById(R.id.bottom_btn_home);
+		bottomBtnHome.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(CategoryView.this, Home.class);
+				startActivity(i);
+			}
+		});
+		
+		categories = new ArrayList<String>();
+		categories.addAll(cdb.getAllCategories());
+		bottomBtnCategoryList = (Button) findViewById(R.id.bottom_btn_category_list);
+		bottomBtnCategoryList.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				showDialog(CATEGORY_SELECT);
+			}
+		});
+		
+		bottomBtnViewAll = (Button) findViewById(R.id.bottom_btn_view_all);
+		bottomBtnViewAll.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(CategoryView.this, CategoryView.class);
+				startActivity(i);
+			}
+		});
+		
+		if(category == null || category.equals(""))
+			bottomBtnViewAll.setBackgroundColor(Color.parseColor("#0276FD"));
+		else
+			bottomBtnCategoryList.setBackgroundColor(Color.parseColor("#0276FD"));
+			
 	}
 }

@@ -1,6 +1,7 @@
 package com.upopple.android.seethatmovie.data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -108,10 +109,16 @@ public class CategoriesDbAdapter extends AbstractDbAdapter{
 	}
 	
 	
-	public Cursor getAllCategories(){
+	public HashSet<String> getAllCategories(){
 		String[] columns = {CATEGORY};
 		Cursor c = mDb.query(TABLE_NAME, columns, null, null, null, null, null);
-		return c;
+		HashSet<String> categories = new HashSet<String>();
+		if(c.moveToFirst()){
+			do{
+				categories.add(c.getString(c.getColumnIndex(CATEGORY)));
+			}while(c.moveToNext());
+		}
+		return categories;
 	}
 	
 	public ArrayList<String> getCategoriesForMovie(String movieId){

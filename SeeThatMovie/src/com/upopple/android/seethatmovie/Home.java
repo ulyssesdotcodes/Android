@@ -8,6 +8,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,18 +26,18 @@ import com.upopple.android.seethatmovie.data.DBMovie;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class Home extends ListActivity {
-	private static final int DIALOG_NO_SEARCH = 0;
+	private static final int CATEGORY_SELECT = 0;
+	private static final int DIALOG_NO_SEARCH = 100;
 	
 	private MoviesDbAdapter mdb;
 	private CategoriesDbAdapter cdb;
 	private HomeAdapter homeAdapter;
 	
 	protected ArrayList<DBMovie> movies;
+	protected ArrayList<String> categories;
 	
 	private Button homeBtnAdd;
 	private EditText addMovieSearch;
-
-	private Button homeBtnViewAll;
 	
 	TextView homeNoMovies;
 	
@@ -52,16 +53,18 @@ public class Home extends ListActivity {
 		
 		super.onCreate(savedInstanceState);
 
+		setUpBottomBar();
+		
 		addMovieSearch = (EditText)findViewById(R.id.add_movie_search);
 		homeNoMovies = (TextView)findViewById(R.id.home_no_movies_to_see);
 		
+		
 		homeAdapter = new HomeAdapter(this);
 		this.setListAdapter(homeAdapter);
-
 		
+
 		homeBtnAdd = (Button) findViewById(R.id.home_btn_add);
 		homeBtnAdd.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				String searchText = addMovieSearch.getText().toString();
 				if(!searchText.equals("")){
@@ -73,16 +76,6 @@ public class Home extends ListActivity {
 				}
 			}
 		});
-		
-		homeBtnViewAll = (Button) findViewById(R.id.home_btn_view_all);
-		homeBtnViewAll.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(Home.this, CategoryView.class);
-				startActivity(i);
-			}
-		});
-		
 	}
 	
 	@Override
@@ -90,6 +83,19 @@ public class Home extends ListActivity {
 		Dialog dialog;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch(id){
+		case CATEGORY_SELECT:
+			builder.setTitle("View Movies From...")
+				.setCancelable(true)
+				.setItems(categories.toArray(new String[]{}), new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						Intent i = new Intent(Home.this, CategoryView.class);
+						i.putExtra("category", categories.get(which));
+						startActivity(i);
+					}
+				});
+			dialog = builder.create();
+			break;
 		case DIALOG_NO_SEARCH:
 			builder.setMessage("Add a movie with a title!")
 				.setCancelable(true)
@@ -160,7 +166,6 @@ public class Home extends ListActivity {
 				});
 				
 				v.setOnClickListener(new OnClickListener() {
-					@Override
 					public void onClick(View v) {
 						Intent i = new Intent(Home.this, MoviePage.class);
 						i.putExtra("id", holder.movie.getId());
@@ -209,5 +214,29 @@ public class Home extends ListActivity {
 			homeNoMovies.setVisibility(TextView.GONE);
 		}
 		homeAdapter.notifyDataSetChanged();
+	}
+	
+	private void setUpBottomBar(){
+		Button bottomBtnHome, bottomBtnCategoryList, bottomBtnViewAll;
+		
+		bottomBtnHome = (Button) findViewById(R.id.bottom_btn_home);
+		bottomBtnHome.setBackgroundColor(Color.parseColor("#0276FD"));
+		
+		categories = new ArrayList<String>();
+		categories.addAll(cdb.getAllCategories());
+		bottomBtnCategoryList = (Button) findViewById(R.id.bottom_btn_category_list);
+		bottomBtnCategoryList.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				showDialog(CATEGORY_SELECT);
+			}
+		});
+		
+		bottomBtnViewAll = (Button) findViewById(R.id.bottom_btn_view_all);
+		bottomBtnViewAll.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent i = new Intent(Home.this, CategoryView.class);
+				startActivity(i);
+			}
+		});
 	}
 }
