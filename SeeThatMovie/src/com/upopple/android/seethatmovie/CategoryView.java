@@ -55,7 +55,7 @@ public class CategoryView extends ListActivity {
 		if(categoryViewAdapter == null) categoryViewAdapter = new CategoryViewAdapter(this, this.getIntent().getStringExtra("category"));
 		this.setListAdapter(categoryViewAdapter);
 		
-		setUpBottomBar();
+		//setUpBottomBar();
 	}
 	
 	protected class CategoryViewAdapter extends BaseAdapter{
@@ -213,47 +213,47 @@ public class CategoryView extends ListActivity {
 	}
 	
 	private void goHome(){
-		startActivity(new Intent(CategoryView.this, Home.class));
+		startActivity(new Intent(CategoryView.this, ToSeeList.class));
 	}
 
 	private void showHelp() {
 		
 	}
 	
-
-	private void setUpBottomBar(){
-		
-		Button bottomBtnHome, bottomBtnCategoryList, bottomBtnViewAll;
-		
-		bottomBtnHome = (Button) findViewById(R.id.bottom_btn_home);
-		bottomBtnHome.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(CategoryView.this, Home.class);
-				startActivity(i);
-			}
-		});
-		
-		categories = new ArrayList<String>();
-		categories.addAll(cdb.getAllCategories());
-		bottomBtnCategoryList = (Button) findViewById(R.id.bottom_btn_category_list);
-		bottomBtnCategoryList.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				showDialog(CATEGORY_SELECT);
-			}
-		});
-		
-		bottomBtnViewAll = (Button) findViewById(R.id.bottom_btn_view_all);
-		bottomBtnViewAll.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(CategoryView.this, CategoryView.class);
-				startActivity(i);
-			}
-		});
-		
-		if(category == null || category.equals(""))
-			bottomBtnViewAll.setBackgroundColor(Color.parseColor("#0276FD"));
-		else
-			bottomBtnCategoryList.setBackgroundColor(Color.parseColor("#0276FD"));
-			
-	}
+//
+//	private void setUpBottomBar(){
+//		
+//		Button bottomBtnHome, bottomBtnCategoryList, bottomBtnViewAll;
+//		
+//		bottomBtnHome = (Button) findViewById(R.id.bottom_btn_home);
+//		bottomBtnHome.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				Intent i = new Intent(CategoryView.this, ToSeeList.class);
+//				startActivity(i);
+//			}
+//		});
+//		
+//		categories = new ArrayList<String>();
+//		categories.addAll(cdb.getAllCategories());
+//		bottomBtnCategoryList = (Button) findViewById(R.id.bottom_btn_category_list);
+//		bottomBtnCategoryList.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				showDialog(CATEGORY_SELECT);
+//			}
+//		});
+//		
+//		bottomBtnViewAll = (Button) findViewById(R.id.bottom_btn_view_all);
+//		bottomBtnViewAll.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				Intent i = new Intent(CategoryView.this, CategoryView.class);
+//				startActivity(i);
+//			}
+//		});
+//		
+//		if(category == null || category.equals(""))
+//			bottomBtnViewAll.setBackgroundColor(Color.parseColor("#0276FD"));
+//		else
+//			bottomBtnCategoryList.setBackgroundColor(Color.parseColor("#0276FD"));
+//			
+//	}
 }

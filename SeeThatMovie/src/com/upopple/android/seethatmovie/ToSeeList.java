@@ -25,7 +25,7 @@ import com.upopple.android.seethatmovie.data.CategoriesDbAdapter;
 import com.upopple.android.seethatmovie.data.DBMovie;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
-public class Home extends ListActivity {
+public class ToSeeList extends ListActivity {
 	private static final int CATEGORY_SELECT = 0;
 	private static final int DIALOG_NO_SEARCH = 100;
 	
@@ -49,33 +49,17 @@ public class Home extends ListActivity {
 		cdb = mdb.getCdbAdapter();
 		cdb.open();
 		
-		setContentView(R.layout.main);
+		setContentView(R.layout.to_see_list);
 		
 		super.onCreate(savedInstanceState);
 
-		setUpBottomBar();
+		//setUpBottomBar();
 		
-		addMovieSearch = (EditText)findViewById(R.id.add_movie_search);
 		homeNoMovies = (TextView)findViewById(R.id.home_no_movies_to_see);
 		
 		
 		homeAdapter = new HomeAdapter(this);
 		this.setListAdapter(homeAdapter);
-		
-
-		homeBtnAdd = (Button) findViewById(R.id.home_btn_add);
-		homeBtnAdd.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				String searchText = addMovieSearch.getText().toString();
-				if(!searchText.equals("")){
-					Intent i = new Intent(Home.this, MovieSearchResults.class);
-					i.putExtra("search", searchText);
-					startActivity(i);
-				} else {
-					showDialog(DIALOG_NO_SEARCH);
-				}
-			}
-		});
 	}
 	
 	@Override
@@ -89,7 +73,7 @@ public class Home extends ListActivity {
 				.setItems(categories.toArray(new String[]{}), new DialogInterface.OnClickListener() {
 					
 					public void onClick(DialogInterface dialog, int which) {
-						Intent i = new Intent(Home.this, CategoryView.class);
+						Intent i = new Intent(ToSeeList.this, CategoryView.class);
 						i.putExtra("category", categories.get(which));
 						startActivity(i);
 					}
@@ -167,7 +151,7 @@ public class Home extends ListActivity {
 				
 				v.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						Intent i = new Intent(Home.this, MoviePage.class);
+						Intent i = new Intent(ToSeeList.this, MoviePage.class);
 						i.putExtra("id", holder.movie.getId());
 						startActivity(i);
 					}
@@ -198,7 +182,7 @@ public class Home extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		if(v.isEnabled()){
-			Intent i = new Intent(Home.this, MoviePage.class);
+			Intent i = new Intent(ToSeeList.this, MoviePage.class);
 			i.putExtra("id", ((DBMovie)l.getItemAtPosition(position)).getId());
 			startActivity(i);
 		}
@@ -215,28 +199,28 @@ public class Home extends ListActivity {
 		}
 		homeAdapter.notifyDataSetChanged();
 	}
-	
-	private void setUpBottomBar(){
-		Button bottomBtnHome, bottomBtnCategoryList, bottomBtnViewAll;
-		
-		bottomBtnHome = (Button) findViewById(R.id.bottom_btn_home);
-		bottomBtnHome.setBackgroundColor(Color.parseColor("#0276FD"));
-		
-		categories = new ArrayList<String>();
-		categories.addAll(cdb.getAllCategories());
-		bottomBtnCategoryList = (Button) findViewById(R.id.bottom_btn_category_list);
-		bottomBtnCategoryList.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				showDialog(CATEGORY_SELECT);
-			}
-		});
-		
-		bottomBtnViewAll = (Button) findViewById(R.id.bottom_btn_view_all);
-		bottomBtnViewAll.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent i = new Intent(Home.this, CategoryView.class);
-				startActivity(i);
-			}
-		});
-	}
+//	
+//	private void setUpBottomBar(){
+//		Button bottomBtnHome, bottomBtnCategoryList, bottomBtnViewAll;
+//		
+//		bottomBtnHome = (Button) findViewById(R.id.bottom_btn_home);
+//		bottomBtnHome.setBackgroundColor(Color.parseColor("#0276FD"));
+//		
+//		categories = new ArrayList<String>();
+//		categories.addAll(cdb.getAllCategories());
+//		bottomBtnCategoryList = (Button) findViewById(R.id.bottom_btn_category_list);
+//		bottomBtnCategoryList.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				showDialog(CATEGORY_SELECT);
+//			}
+//		});
+//		
+//		bottomBtnViewAll = (Button) findViewById(R.id.bottom_btn_view_all);
+//		bottomBtnViewAll.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//				Intent i = new Intent(ToSeeList.this, CategoryView.class);
+//				startActivity(i);
+//			}
+//		});
+//	}
 }

@@ -115,7 +115,9 @@ public class CategoriesDbAdapter extends AbstractDbAdapter{
 		HashSet<String> categories = new HashSet<String>();
 		if(c.moveToFirst()){
 			do{
-				categories.add(c.getString(c.getColumnIndex(CATEGORY)));
+				String category = c.getString(c.getColumnIndex(CATEGORY));
+				if(!category.startsWith("_"))
+					categories.add(category);
 			}while(c.moveToNext());
 		}
 		return categories;

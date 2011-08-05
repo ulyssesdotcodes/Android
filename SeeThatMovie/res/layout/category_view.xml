@@ -9,8 +9,6 @@
     <ListView android:id="@android:id/list" 
     android:layout_height="fill_parent" android:dividerHeight="1px" 
     android:layout_width="fill_parent" android:layout_weight="1">
-    </ListView>
- 	
-	<include android:id="@+id/bottom_bar" layout="@layout/bottom_bar" /> 
+    </ListView> 
     
 </LinearLayout>

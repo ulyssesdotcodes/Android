@@ -103,7 +103,7 @@ public class AddMovie extends Activity {
 		mdb.close();
 		titleBox.setText("");
 		categoryAuto.setText("");
-		Intent i = new Intent(AddMovie.this, Home.class);
+		Intent i = new Intent(AddMovie.this, ToSeeList.class);
 		startActivity(i);
 	}	
 	
