@@ -7,12 +7,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -40,7 +37,9 @@ public class AddMovie extends Activity {
 	MoviesDbAdapter mdb;
 	CategoriesDbAdapter cdb;
 	
-	Button addbutton;
+	Button addbutton, cancelButton;
+	
+	boolean addMovie;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -52,6 +51,8 @@ public class AddMovie extends Activity {
 
 		cdb = mdb.getCdbAdapter();
 		cdb.open();
+		
+		addMovie = true;
 		
 		textWatch = new AddMovieTextWatcher();
 		
@@ -73,39 +74,59 @@ public class AddMovie extends Activity {
 			
 			public void onClick(View v) {
 				try{
-					saveItToDb();
+					Intent i = new Intent(AddMovie.this, MovieTabWidget.class);
+					startActivity(i);
 				} catch(Exception e){
 					e.printStackTrace();
 				}
 			}
 		});
+		
+		cancelButton = (Button) findViewById(R.id.cancelAddButton);
+		cancelButton.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				addMovie = false;
+				Intent i = new Intent(AddMovie.this, MovieTabWidget.class);
+				startActivity(i);
+			}
+		});
 	}
 	
 	public void saveItToDb(){
-		String movieId = getIntent().getStringExtra("movieId");
-		String movieTitle = titleBox.getText().toString();
-		
-		//Adding categories
-		ArrayList<String> movieCategories = new ArrayList<String>();
-		for(String category: categoryAuto.getText().toString().split(",")){
-			if(category.trim().startsWith("_")){
-				
-			}
-			movieCategories.add(category.trim());
-		}
-		
-		if(seenIt.isChecked())
-			movieCategories.add("_seen");
-
-		mdb.insertmovie(movieId, movieTitle, movieCategories);
+		if(addMovie){
+			String movieId = getIntent().getStringExtra("movieId");
+			String movieTitle = titleBox.getText().toString();
 			
-		cdb.close();
-		mdb.close();
-		titleBox.setText("");
-		categoryAuto.setText("");
-		Intent i = new Intent(AddMovie.this, ToSeeList.class);
-		startActivity(i);
+			//Adding categories
+			ArrayList<String> movieCategories = new ArrayList<String>();
+			for(String category: categoryAuto.getText().toString().split(",")){
+				if(!category.trim().startsWith("_")){
+					movieCategories.add(category.trim());
+				}
+			}
+			
+			if(seenIt.isChecked())
+				movieCategories.add("_seen");
+	
+			mdb.insertmovie(movieId, movieTitle, movieCategories);
+				
+			cdb.close();
+			mdb.close();
+			titleBox.setText("");
+			categoryAuto.setText("");
+		}
 	}	
+	
+	@Override
+	protected void onPause() {
+		try{
+			saveItToDb();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		super.onPause();
+	}
 	
 	@Override
 	protected Dialog onCreateDialog(int id){

@@ -11,6 +11,9 @@
     <AutoCompleteTextView android:layout_height="wrap_content" android:text="Category" android:layout_width="match_parent" android:id="@+id/movieCategoryEdit">
         <requestFocus></requestFocus>
     </AutoCompleteTextView>
-    <Button android:layout_height="wrap_content" android:id="@+id/addMovieButton" android:text="Add Movie" android:layout_width="78dp" android:layout_weight="0.05"></Button>
     
+    <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="match_parent">
+        <Button android:layout_height="wrap_content" android:id="@+id/addMovieButton" android:text="Done" android:layout_width="fill_parent" android:layout_weight="0.5"></Button>
+        <Button android:layout_height="wrap_content" android:id="@+id/cancelAddButton" android:text="Cancel" android:layout_width="fill_parent" android:layout_weight="0.5"></Button>
+    </LinearLayout>
 </LinearLayout>

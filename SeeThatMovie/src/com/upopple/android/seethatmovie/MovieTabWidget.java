@@ -1,5 +1,7 @@
 package com.upopple.android.seethatmovie;
 
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TabActivity;
@@ -14,7 +16,10 @@ import android.widget.EditText;
 import android.widget.TabHost;
 
 public class MovieTabWidget extends TabActivity {
+	public static final int CATEGORY_SELECT = 0;
 	public static final int DIALOG_NO_SEARCH = 100;
+
+	protected ArrayList<String> categories;
 	
 	private Button homeBtnAdd;
 	private EditText addMovieSearch;
@@ -43,22 +48,26 @@ public class MovieTabWidget extends TabActivity {
 		
 		Resources res = getResources();
 		TabHost tabHost = getTabHost();
+		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+			
+			public void onTabChanged(String tabId) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
 		TabHost.TabSpec tabSpec;
 		Intent intent;
 		
 		intent = new Intent().setClass(this, ToSeeList.class);
 		
-		tabSpec = tabHost.newTabSpec("home").setIndicator("Home").setContent(intent);
-		tabHost.addTab(tabSpec);
-		
-		intent = new Intent().setClass(this, CategoryView.class);
-
-		tabSpec = tabHost.newTabSpec("categories").setIndicator("Categories").setContent(intent);
+		tabSpec = tabHost.newTabSpec("home").setIndicator("To See").setContent(intent);
 		tabHost.addTab(tabSpec);
 		
 		intent = new Intent().setClass(this, CategoryView.class);
 		
-		tabSpec = tabHost.newTabSpec("view_all").setIndicator("View All").setContent(intent);
+		tabSpec = tabHost.newTabSpec("view_all").setIndicator("All").setContent(intent);
 		tabHost.addTab(tabSpec);
 		
 		
@@ -69,6 +78,19 @@ public class MovieTabWidget extends TabActivity {
 		Dialog dialog;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch(id){
+		case CATEGORY_SELECT:
+			builder.setTitle("View Movies From...")
+				.setCancelable(true)
+				.setItems(categories.toArray(new String[]{}), new DialogInterface.OnClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which) {
+						Intent i = new Intent(MovieTabWidget.this, CategoryView.class);
+						i.putExtra("category", categories.get(which));
+						startActivity(i);
+					}
+				});
+			dialog = builder.create();
+			break;
 		case DIALOG_NO_SEARCH:
 			builder.setMessage("Add a movie with a title!")
 				.setCancelable(true)

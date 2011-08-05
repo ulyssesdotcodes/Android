@@ -70,10 +70,8 @@ public class CategoryView extends ListActivity {
 		public void getdata(String cat){
 			category = cat;
 			if(category == null || category.equals("")){
-				listTitle.setText("All Movies");
 				movies = mdb.getMovies(false);
 			} else {
-				listTitle.setText(category + " Movies");
 				movies = cdb.getMovies(category, false);
 			}
 			if(movies == null){

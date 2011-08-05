@@ -26,7 +26,6 @@ import com.upopple.android.seethatmovie.data.DBMovie;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class ToSeeList extends ListActivity {
-	private static final int CATEGORY_SELECT = 0;
 	private static final int DIALOG_NO_SEARCH = 100;
 	
 	private MoviesDbAdapter mdb;
@@ -34,7 +33,6 @@ public class ToSeeList extends ListActivity {
 	private HomeAdapter homeAdapter;
 	
 	protected ArrayList<DBMovie> movies;
-	protected ArrayList<String> categories;
 	
 	private Button homeBtnAdd;
 	private EditText addMovieSearch;
@@ -67,19 +65,6 @@ public class ToSeeList extends ListActivity {
 		Dialog dialog;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch(id){
-		case CATEGORY_SELECT:
-			builder.setTitle("View Movies From...")
-				.setCancelable(true)
-				.setItems(categories.toArray(new String[]{}), new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						Intent i = new Intent(ToSeeList.this, CategoryView.class);
-						i.putExtra("category", categories.get(which));
-						startActivity(i);
-					}
-				});
-			dialog = builder.create();
-			break;
 		case DIALOG_NO_SEARCH:
 			builder.setMessage("Add a movie with a title!")
 				.setCancelable(true)
@@ -124,7 +109,7 @@ public class ToSeeList extends ListActivity {
 		public int getCount() {return movies.size();}
 		public DBMovie getItem(int i){return movies.get(i);}
 		public long getItemId(int i){return i;}
-		public void remove(int i){movies.remove(i);}
+		public void remove(DBMovie dbm){movies.remove(dbm);}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder holder;
 			View v = convertView;
@@ -139,7 +124,7 @@ public class ToSeeList extends ListActivity {
 					public void onClick(View v) {
 						if(holder.mCheck.isChecked()){
 							cdb.insertMovieCategory(holder.movie.getId(), holder.movie.getTitle(), "_seen");
-							movies.remove(holder.position);
+							movies.remove(holder.movie);
 							homeAdapter.notifyDataSetChanged();
 							if(movies.size() == 0)
 								homeNoMovies.setVisibility(View.VISIBLE);
@@ -163,6 +148,7 @@ public class ToSeeList extends ListActivity {
 			}
 			
 			holder.movie = getItem(position);
+			holder.mCheck.setChecked(cdb.movieHasCategory(holder.movie.getId(), "_seen"));
 			holder.mTitle.setText(holder.movie.getTitle());
 			
 			v.setTag(holder);

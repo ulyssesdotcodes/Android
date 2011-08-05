@@ -5,7 +5,6 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
     
-    <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/categoryViewText" android:text="@string/title_to_see"></TextView>
     <TextView android:text="@string/home_no_movies" android:id="@+id/home_no_movies_to_see" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone"></TextView>
 
     <ListView android:id="@android:id/list" 
