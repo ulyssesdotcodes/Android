@@ -14,11 +14,16 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 import com.upopple.android.seethatmovie.web.RTMovieResult;
 import com.upopple.android.seethatmovie.web.RTMovieResults;
 import com.upopple.android.seethatmovie.web.RottenTomatoesAPIAsync;
 
 public class MovieSearchResults extends ListActivity {
+	private static final int MOVIE_ALREADY_EXISTS = 100;
+	
+	MoviesDbAdapter mdb;
+	
 	SearchAdapter searchAdapter;
 	TextView listDescription;
 	
@@ -27,6 +32,9 @@ public class MovieSearchResults extends ListActivity {
 		setContentView(R.layout.movie_search_results);
 		super.onCreate(savedInstanceState);
 
+		mdb = new MoviesDbAdapter(this);
+		mdb.open();
+		
 		listDescription = (TextView)findViewById(R.id.categoryListText);	
 		
 		Intent i = getIntent();
@@ -103,9 +111,11 @@ public class MovieSearchResults extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		
+		String title = ((RTMovieResult)l.getItemAtPosition(position)).getTitleYear();
+		if(mdb.getMovieByTitle(title, false) == null)
+			showDialog(id)
 		Intent i = new Intent(MovieSearchResults.this, AddMovie.class);
-		i.putExtra("movieTitle", ((RTMovieResult)l.getItemAtPosition(position)).getTitleYear());
+		i.putExtra("movieTitle", );
 		startActivity(i);
 	}
 

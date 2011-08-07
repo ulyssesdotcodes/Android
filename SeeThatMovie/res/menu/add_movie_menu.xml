@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/addMovieNewCategory" android:title="@string/add_movie_new_category"></item>
+    <item android:id="@+id/addMovieEditCategories" android:title="@string/add_movie_edit_categories"></item>
+</menu>

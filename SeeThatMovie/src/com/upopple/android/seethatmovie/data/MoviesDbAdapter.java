@@ -138,4 +138,18 @@ public class MoviesDbAdapter extends AbstractDbAdapter{
 			return null;
 		}
 	}
+	
+	public DBMovie getMovieByTitle(String title, boolean withJson){
+		String selection = MoviesDbAdapter.TITLE + " = ?";
+		String[] selectionArgs = {title};
+		Cursor c = mDb.query(MoviesDbAdapter.TABLE_NAME, null, selection, selectionArgs, null, null, null);
+		if(c.moveToFirst()){
+			String id = c.getString(c.getColumnIndex(MoviesDbAdapter.KEY_ID));
+			String json_data = (withJson) ? c.getString(c.getColumnIndex(MoviesDbAdapter.JSON_DATA)) : "";
+			long dateAdded = c.getLong(c.getColumnIndex(MoviesDbAdapter.DATE_ADDED));
+			return new DBMovie(id, title, json_data, dateAdded);
+		} else {
+			return null;
+		}
+	}
 }

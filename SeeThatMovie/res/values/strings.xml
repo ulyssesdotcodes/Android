@@ -8,4 +8,6 @@
     <string name="title_to_see">Movies To See</string>
     <string name="home_no_movies">Congrats! You\'ve watched all the movies on your list. Click &quot;Add Movie&quot; to add another.</string>
     <string name="btn_home">Home</string>
+    <string name="add_movie_new_category">New Category</string>
+    <string name="add_movie_edit_categories">Edit Categories</string>
 </resources>
