@@ -3,8 +3,11 @@ package com.upopple.android.seethatmovie;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -49,6 +52,38 @@ public class MovieSearchResults extends ListActivity {
 		super.onPostCreate(savedInstanceState);
 		
 	}
+	
+	
+	protected Dialog onCreateDialog(int id){
+		Dialog inputError;
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		switch(id){
+		case MOVIE_ALREADY_EXISTS:
+			builder.setTitle("Can't add that")
+			.setMessage("You've already added that movie!")
+			.setCancelable(true)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			});
+			inputError = builder.create();
+			break;
+		default:
+			builder.setMessage("Oh no! Something broke.")
+			.setCancelable(true)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			});
+			inputError = builder.create();
+			break;
+		}
+		return inputError;
+	}
+	
 	
 	private class SearchAdapter extends BaseAdapter{
 		private LayoutInflater li;
@@ -112,11 +147,13 @@ public class MovieSearchResults extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		String title = ((RTMovieResult)l.getItemAtPosition(position)).getTitleYear();
-		if(mdb.getMovieByTitle(title, false) == null)
-			showDialog(id)
-		Intent i = new Intent(MovieSearchResults.this, AddMovie.class);
-		i.putExtra("movieTitle", );
-		startActivity(i);
+		if(mdb.getMovieByTitle(title, false) != null)
+			showDialog(MOVIE_ALREADY_EXISTS);
+		else{
+			Intent i = new Intent(MovieSearchResults.this, AddMovie.class);
+			i.putExtra("movieTitle", title);
+			startActivity(i);
+		}
 	}
 
 }

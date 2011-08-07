@@ -69,7 +69,7 @@ public class MoviePage extends Activity{
 					
 					public void onClick(DialogInterface dialog, int which) {
 						mdb.removeMovie(thisMovie.getId());
-						startActivity(new Intent(MoviePage.this, ToSeeList.class));
+						startActivity(new Intent(MoviePage.this, MovieTabWidget.class));
 					}
 				})
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {

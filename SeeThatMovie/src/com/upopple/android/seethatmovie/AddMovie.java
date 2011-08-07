@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,6 +33,8 @@ import com.upopple.android.seethatmovie.data.CategoriesDbAdapter;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class AddMovie extends Activity {
+	CategoryMultiChoiceListAdapter cmclAdapter;
+	
 	AutoCompleteTextView categoryAuto;
 	TextView titleBox;
 	AddMovieTextWatcher textWatch;
@@ -65,6 +68,8 @@ public class AddMovie extends Activity {
 
 		cdb = mdb.getCdbAdapter();
 		cdb.open();
+		
+		cmclAdapter = new CategoryMultiChoiceListAdapter(this);
 		
 		addMovie = true;
 		
@@ -156,7 +161,7 @@ public class AddMovie extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
 		case R.id.addMovieNewCategory:
-			
+			showDialog(CATEGORY_ADD);
 			return true;
 		case R.id.addMovieEditCategories:
 			showDialog(CATEGORY_SELECT);
@@ -184,6 +189,7 @@ public class AddMovie extends Activity {
 					else{
 						categories.add(newCategory.getText().toString());
 						categoriesArray = categories.toArray(new String[]{});
+						cmclAdapter.notifyDataSetChanged();
 						dialog.cancel();
 					}
 				}
@@ -196,7 +202,6 @@ public class AddMovie extends Activity {
 		inputError = builder.create();
 		break;
 		case CATEGORY_SELECT: 
-			CategoryMultiChoiceListAdapter cmclAdapter = new CategoryMultiChoiceListAdapter(this);
 			builder.setTitle("Add Categories")
 				.setCancelable(true)
 				.setAdapter(cmclAdapter, new DialogInterface.OnClickListener() {
@@ -279,10 +284,11 @@ public class AddMovie extends Activity {
 			}
 
 			holder.categoryText.setText(categoriesArray[position]);
-			holder.addCategory.setChecked(categories.contains(holder.categoryText.getText().toString()));
+			holder.categoryText.setTextColor(Color.BLACK);
+			holder.addCategory.setChecked(movieCategories.contains(holder.categoryText.getText().toString()));
 			
 			v.setTag(holder);
-			return null;
+			return v;
 		}
 		
 		public class ViewHolder {
