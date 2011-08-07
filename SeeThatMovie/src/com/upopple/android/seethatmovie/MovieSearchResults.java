@@ -60,7 +60,7 @@ public class MovieSearchResults extends ListActivity {
 			}
 			
 			
-			if(movieResults == null){
+			if(movieResults == null || movieResults.getMovies().size() == 0){
 				movieResults = new RTMovieResults();
 				movieResults.setMovies(new ArrayList<RTMovieResult>());
 				listDescription.setText("Oh no! No movies were found.\nSelect what you typed in to add it anyway, or go back to try again.");

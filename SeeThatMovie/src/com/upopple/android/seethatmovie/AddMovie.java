@@ -1,6 +1,7 @@
 package com.upopple.android.seethatmovie;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,6 +34,8 @@ public class AddMovie extends Activity {
 	Dialog inputError;
 	
 	ArrayList<String> movieList;
+	ArrayList<String> movieCategories;
+	String[] categories;
 	
 	MoviesDbAdapter mdb;
 	CategoriesDbAdapter cdb;
@@ -53,6 +56,9 @@ public class AddMovie extends Activity {
 		cdb.open();
 		
 		addMovie = true;
+		
+		categories = cdb.getAllCategories().toArray(new String[]{});
+		movieCategories = new ArrayList<String>();
 		
 		textWatch = new AddMovieTextWatcher();
 		
@@ -99,7 +105,6 @@ public class AddMovie extends Activity {
 			String movieTitle = titleBox.getText().toString();
 			
 			//Adding categories
-			ArrayList<String> movieCategories = new ArrayList<String>();
 			for(String category: categoryAuto.getText().toString().split(",")){
 				if(!category.trim().startsWith("_")){
 					movieCategories.add(category.trim());
@@ -136,10 +141,24 @@ public class AddMovie extends Activity {
 		case CATEGORY_SELECT: 
 			builder.setTitle("Add Categories")
 				.setCancelable(true)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				.setMultiChoiceItems(categories, null, new DialogInterface.OnMultiChoiceClickListener() {
+					
+					public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+						if(isChecked){
+							movieCategories.add(categories[which]);
+						} else {
+							movieCategories.remove(categories[which]);
+						}
+					}
+				})
+				.setPositiveButton("Done", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
-						categoryAuto.getText().delete(0, 1);
+					}
+				})
+				.setNegativeButton("Clear", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						
 					}
 				});
 			inputError = builder.create();
