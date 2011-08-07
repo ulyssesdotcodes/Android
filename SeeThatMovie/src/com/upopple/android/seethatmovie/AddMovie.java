@@ -11,8 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,24 +18,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.upopple.android.seethatmovie.CategoryView.CategoryViewAdapter.ViewHolder;
 import com.upopple.android.seethatmovie.data.CategoriesDbAdapter;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
 
 public class AddMovie extends Activity {
 	CategoryMultiChoiceListAdapter cmclAdapter;
 	
-	AutoCompleteTextView categoryAuto;
-	TextView titleBox;
-	AddMovieTextWatcher textWatch;
+	TextView titleBox, categoryText;
 	
 	CheckBox seenIt;
 
@@ -77,18 +70,12 @@ public class AddMovie extends Activity {
 		categoriesArray = categories.toArray(new String[]{});
 		movieCategories = new ArrayList<String>();
 		
-		textWatch = new AddMovieTextWatcher();
 		
 		Intent i = getIntent();
 		titleBox = (TextView)findViewById(R.id.movieTitle);
 		titleBox.setText(i.getStringExtra("movieTitle"));
 		
-		categoryAuto = (AutoCompleteTextView)findViewById(R.id.movieCategoryEdit);
-		ArrayList<String> allCategories = new ArrayList<String>();
-		allCategories.addAll(cdb.getAllCategories());
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, allCategories.toArray(new String[]{}));
-		categoryAuto.setAdapter(adapter);
-		categoryAuto.addTextChangedListener(textWatch);
+		categoryText = (TextView)findViewById(R.id.movieCategoryText);
 		
 		seenIt = (CheckBox) findViewById(R.id.seenIt);
 		
@@ -121,13 +108,6 @@ public class AddMovie extends Activity {
 			String movieId = getIntent().getStringExtra("movieId");
 			String movieTitle = titleBox.getText().toString();
 			
-			//Adding categories
-			for(String category: categoryAuto.getText().toString().split(",")){
-				if(!category.trim().startsWith("_")){
-					movieCategories.add(category.trim());
-				}
-			}
-			
 			if(seenIt.isChecked())
 				movieCategories.add("_seen");
 	
@@ -136,7 +116,7 @@ public class AddMovie extends Activity {
 			cdb.close();
 			mdb.close();
 			titleBox.setText("");
-			categoryAuto.setText("");
+			categoryText.setText("");
 		}
 	}	
 	
@@ -189,6 +169,8 @@ public class AddMovie extends Activity {
 					else{
 						categories.add(newCategory.getText().toString());
 						categoriesArray = categories.toArray(new String[]{});
+						movieCategories.add(newCategory.getText().toString());
+						categoryText.setText(movieCategories.toString());
 						cmclAdapter.notifyDataSetChanged();
 						dialog.cancel();
 					}
@@ -210,6 +192,7 @@ public class AddMovie extends Activity {
 				})
 				.setPositiveButton("Done", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
+						categoryText.setText(movieCategories.toString());
 						dialog.cancel();
 					}
 				})
@@ -226,7 +209,6 @@ public class AddMovie extends Activity {
 				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
-						categoryAuto.getText().delete(0, 1);
 					}
 				});
 			inputError = builder.create();
@@ -295,30 +277,5 @@ public class AddMovie extends Activity {
 			TextView categoryText;
 			CheckBox addCategory;
 		}
-	}
-	
-	private class AddMovieTextWatcher implements TextWatcher{
-
-		
-		public void afterTextChanged(Editable e) {
-			if(e.toString().startsWith("_")){
-				showDialog(CATEGORY_ERROR_UNDERSCORE);
-			}
-		}
-
-		
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
-			// TODO Auto-generated method stub
-			
-		}
-		
 	}
 }

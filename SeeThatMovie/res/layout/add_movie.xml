@@ -5,12 +5,11 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent" android:weightSum="1"
   android:padding="@dimen/default_padding">
-    <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/movieTitle"></TextView>
-    <TextView android:text="TextView" android:id="@+id/movieCategoryText" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-    <CheckBox android:text=" Seen it!" android:id="@+id/seenIt" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
-    <AutoCompleteTextView android:layout_height="wrap_content" android:text="Category" android:layout_width="match_parent" android:id="@+id/movieCategoryEdit">
-        <requestFocus></requestFocus>
-    </AutoCompleteTextView>
+    <RelativeLayout android:id="@+id/relativeLayout1" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="wrap_content" android:text="Movie Title" android:id="@+id/movieTitle" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignParentLeft="true"></TextView>
+        <CheckBox android:layout_width="wrap_content" android:text=" Seen it!" android:layout_height="wrap_content" android:id="@+id/seenIt" android:layout_centerVertical="true" android:layout_alignParentRight="true"></CheckBox>
+    </RelativeLayout>
+    <TextView android:text="Add categories" android:id="@+id/movieCategoryText" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
     
     <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="match_parent">
         <Button android:layout_height="wrap_content" android:id="@+id/addMovieButton" android:text="Done" android:layout_width="fill_parent" android:layout_weight="0.5"></Button>
