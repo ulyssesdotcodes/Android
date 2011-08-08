@@ -47,13 +47,6 @@ public class MovieSearchResults extends ListActivity {
 		
 	}
 	
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		
-	}
-	
-	
 	protected Dialog onCreateDialog(int id){
 		Dialog inputError;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

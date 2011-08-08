@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.upopple.android.seethatmovie.data.CategoriesDbAdapter;
 import com.upopple.android.seethatmovie.data.MoviesDbAdapter;
+import com.upopple.android.seethatmovie.util.Util;
 
 public class AddMovie extends Activity {
 	CategoryMultiChoiceListAdapter cmclAdapter;
@@ -37,6 +38,7 @@ public class AddMovie extends Activity {
 	private static final int CATEGORY_SELECT = 0;
 	private static final int CATEGORY_ADD = 1;
 	private static final int CATEGORY_ERROR_UNDERSCORE = 100;
+	private static final int CATEGORY_ERROR_ALREADY_ADDED = 101;
 	Dialog inputError;
 	
 	ArrayList<String> movieList;
@@ -166,11 +168,13 @@ public class AddMovie extends Activity {
 				public void onClick(DialogInterface dialog, int which) {
 					if(newCategory.getText().toString().startsWith("_"))
 						showDialog(CATEGORY_ERROR_UNDERSCORE);
+					else if(categories.contains(newCategory.getText()))
+						showDialog(CATEGORY_ERROR_ALREADY_ADDED);
 					else{
 						categories.add(newCategory.getText().toString());
 						categoriesArray = categories.toArray(new String[]{});
 						movieCategories.add(newCategory.getText().toString());
-						categoryText.setText(movieCategories.toString());
+						categoryText.setText(Util.arrayListToString(movieCategories));
 						cmclAdapter.notifyDataSetChanged();
 						dialog.cancel();
 					}
@@ -198,7 +202,17 @@ public class AddMovie extends Activity {
 				})
 				.setNegativeButton("Clear", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						
+						movieCategories = new ArrayList<String>();
+					}
+				});
+			inputError = builder.create();
+			break;
+		case CATEGORY_ERROR_ALREADY_ADDED: 
+			builder.setMessage("The same category cannot be created twice!")
+				.setCancelable(true)
+				.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
 					}
 				});
 			inputError = builder.create();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SeeThatMovie</string>
+    <string name="app_name">See That Movie!</string>
     <string name="btn_add_movie">Add Movie</string>
     <string name="btn_to_see">To See</string>
     <string name="btn_category_list">Category</string>
@@ -10,4 +10,6 @@
     <string name="btn_home">Home</string>
     <string name="add_movie_new_category">New Category</string>
     <string name="add_movie_edit_categories">Edit Categories</string>
+    <string name="listSelectContinue">&gt;</string>
+    <string name="categories">Categories</string>
 </resources>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +25,8 @@ public class MovieTabWidget extends TabActivity {
 	private Button homeBtnAdd;
 	private EditText addMovieSearch;
 	
+	ProgressDialog fetchMoviesDialog;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,6 +40,7 @@ public class MovieTabWidget extends TabActivity {
 			public void onClick(View v) {
 				String searchText = addMovieSearch.getText().toString();
 				if(!searchText.equals("")){
+					fetchMoviesDialog = ProgressDialog.show(MovieTabWidget.this, "", "Fetching movies, please wait...", true);
 					Intent i = new Intent(MovieTabWidget.this, MovieSearchResults.class);
 					i.putExtra("search", searchText);
 					startActivity(i);
@@ -114,5 +118,12 @@ public class MovieTabWidget extends TabActivity {
 			break;
 		}
 		return dialog;
+	}
+	
+	@Override
+	protected void onPause() {
+		if(fetchMoviesDialog != null)
+			fetchMoviesDialog.dismiss();
+		super.onPause();
 	}
 }

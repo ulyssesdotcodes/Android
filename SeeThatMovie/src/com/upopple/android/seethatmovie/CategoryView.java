@@ -8,7 +8,6 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,12 +30,12 @@ public class CategoryView extends ListActivity {
 	protected CategoriesDbAdapter cdb;
 	protected CategoryViewAdapter categoryViewAdapter;
 	protected ArrayList<DBMovie> movies;
-	protected ArrayList<String> categories;
+	protected String[] categories;
 	
 	
 	protected String category;
 	
-	private TextView listTitle;
+	private TextView listTitle, allCategoriesOption;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +49,9 @@ public class CategoryView extends ListActivity {
 		super.onCreate(savedInstanceState);
 		
 		listTitle = (TextView) findViewById(R.id.categoryViewText);
+		
+		categories = cdb.getAllCategories().toArray(new String[]{});
+		allCategoriesOption = (TextView)findViewById(R.id.viewAllCategories);
 		
 		if(categoryViewAdapter == null) categoryViewAdapter = new CategoryViewAdapter(this, this.getIntent().getStringExtra("category"));
 		this.setListAdapter(categoryViewAdapter);
@@ -71,13 +72,21 @@ public class CategoryView extends ListActivity {
 			category = cat;
 			if(category == null || category.equals("")){
 				movies = mdb.getMovies(false);
+				if(movies != null){
+					allCategoriesOption.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
+							showDialog(CATEGORY_SELECT);
+						}
+					});
+					allCategoriesOption.setVisibility(View.VISIBLE);
+				} else {
+					listTitle.setText("Add some movies to watch using the search bar above!");
+					listTitle.setVisibility(View.VISIBLE);
+				}
 			} else {
+				listTitle.setText(category + " Movies");
+				listTitle.setVisibility(View.VISIBLE);
 				movies = cdb.getMovies(category, false);
-			}
-			if(movies == null){
-				movies = new ArrayList<DBMovie>();
-				TextView homeNoMovies = (TextView)findViewById(R.id.home_no_movies_to_see);
-				homeNoMovies.setVisibility(TextView.VISIBLE);
 			}
 		}
 		
@@ -152,11 +161,11 @@ public class CategoryView extends ListActivity {
 		case CATEGORY_SELECT:
 			builder.setTitle("View Movies From...")
 				.setCancelable(true)
-				.setItems(categories.toArray(new String[]{}), new DialogInterface.OnClickListener() {
+				.setItems(categories, new DialogInterface.OnClickListener() {
 					
 					public void onClick(DialogInterface dialog, int which) {
 						Intent i = new Intent(CategoryView.this, CategoryView.class);
-						i.putExtra("category", categories.get(which));
+						i.putExtra("category", categories[which]);
 						startActivity(i);
 					}
 				});
@@ -217,41 +226,4 @@ public class CategoryView extends ListActivity {
 	private void showHelp() {
 		
 	}
-	
-//
-//	private void setUpBottomBar(){
-//		
-//		Button bottomBtnHome, bottomBtnCategoryList, bottomBtnViewAll;
-//		
-//		bottomBtnHome = (Button) findViewById(R.id.bottom_btn_home);
-//		bottomBtnHome.setOnClickListener(new OnClickListener() {
-//			public void onClick(View v) {
-//				Intent i = new Intent(CategoryView.this, ToSeeList.class);
-//				startActivity(i);
-//			}
-//		});
-//		
-//		categories = new ArrayList<String>();
-//		categories.addAll(cdb.getAllCategories());
-//		bottomBtnCategoryList = (Button) findViewById(R.id.bottom_btn_category_list);
-//		bottomBtnCategoryList.setOnClickListener(new OnClickListener() {
-//			public void onClick(View v) {
-//				showDialog(CATEGORY_SELECT);
-//			}
-//		});
-//		
-//		bottomBtnViewAll = (Button) findViewById(R.id.bottom_btn_view_all);
-//		bottomBtnViewAll.setOnClickListener(new OnClickListener() {
-//			public void onClick(View v) {
-//				Intent i = new Intent(CategoryView.this, CategoryView.class);
-//				startActivity(i);
-//			}
-//		});
-//		
-//		if(category == null || category.equals(""))
-//			bottomBtnViewAll.setBackgroundColor(Color.parseColor("#0276FD"));
-//		else
-//			bottomBtnCategoryList.setBackgroundColor(Color.parseColor("#0276FD"));
-//			
-//	}
 }

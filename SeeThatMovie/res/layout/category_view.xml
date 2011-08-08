@@ -5,6 +5,9 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
     <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/categoryViewText" android:visibility="gone"></TextView>
+    
+    <TextView android:id="@+id/viewAllCategories" android:gravity="center_vertical" android:layout_width="fill_parent" android:text="@string/categories" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_alignParentLeft="true" android:drawableRight="@android:drawable/ic_menu_more"></TextView>
+
     <ListView android:id="@android:id/list" 
     android:layout_height="fill_parent" android:dividerHeight="1px" 
     android:layout_width="fill_parent" android:layout_weight="1">
